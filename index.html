@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<!-- BUILD 2026-09-19 v2: sidebar always visible (no collapse) -->
+<title>Alcala Rice Processing Center | Financial Recording &amp; Monitoring</title>
+<style>
+:root{
+  --green-950:#0d2b14; --green-900:#123d1f; --green-800:#1b5e20; --green-700:#2e7d32;
+  --green-600:#388e3c; --green-100:#e8f5e9; --green-50:#f1f8e9;
+  --gold:#c9a227; --gold-dark:#9a7b1a; --gold-light:#faf3dc;
+  --bg:#edf1e8; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e3e8e0;
+  --red:#c62828; --red-bg:#fdecec; --amber:#e65100; --amber-bg:#fff3e0;
+  --blue:#1565c0; --blue-bg:#e3f2fd; --teal:#00695c;
+  --shadow:0 1px 3px rgba(18,61,31,.12),0 4px 14px rgba(18,61,31,.08);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.5}
+.app{display:flex;min-height:100vh}
+/* ---------- Sidebar ---------- */
+.sidebar{width:264px;background:linear-gradient(180deg,var(--green-950) 0%,var(--green-900) 60%,#0f3418 100%);color:#e9f2ea;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;flex-shrink:0;z-index:40;overflow-y:auto}
+.brand{padding:22px 18px 16px;border-bottom:1px solid rgba(201,162,39,.35);display:flex;gap:12px;align-items:center}
+.brand-mark{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a8,var(--gold) 55%,#8a6d14);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 0 3px rgba(201,162,39,.25)}
+.brand-mark svg{width:30px;height:30px}
+.brand h1{font-size:15px;line-height:1.25;letter-spacing:.3px;color:#fff}
+.brand h1 span{color:var(--gold);font-weight:800}
+.brand small{display:block;font-size:11px;color:#b9cbbd;font-weight:400;letter-spacing:.6px;text-transform:uppercase;margin-top:2px}
+.nav{padding:14px 12px;display:flex;flex-direction:column;gap:4px;flex:1;min-height:fit-content}
+.nav-label{font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:#93a898;padding:12px 10px 6px}
+.nav-btn{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#d5e2d8;padding:10px 12px;border-radius:10px;font-size:13.8px;cursor:pointer;text-align:left;transition:.15s}
+.nav-btn svg{width:19px;height:19px;flex-shrink:0;opacity:.9}
+.nav-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-btn.active{background:linear-gradient(90deg,var(--gold),#e3c554);color:#20301a;font-weight:700;box-shadow:0 2px 10px rgba(201,162,39,.4)}
+.side-foot{padding:14px 16px;border-top:1px solid rgba(255,255,255,.12);font-size:11.5px;color:#9db3a2}
+/* ---------- Main / topbar ---------- */
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px 22px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30}
+.topbar h2{font-size:17px;color:var(--green-900)}
+.topbar .date-chip{margin-left:auto;font-size:12.5px;color:var(--muted);background:var(--green-50);border:1px solid var(--line);padding:6px 12px;border-radius:20px;white-space:nowrap}
+.menu-btn{display:none;border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 10px;font-size:16px;cursor:pointer}
+.content{padding:22px;max-width:1360px;width:100%;margin:0 auto}
+.view{display:none;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.page-head{display:flex;align-items:flex-end;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+.page-head h3{font-size:22px;color:var(--green-900)}
+.page-head p{color:var(--muted);font-size:13px;margin-top:2px}
+.page-head .spacer{flex:1}
+/* ---------- Cards / KPI ---------- */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:18px}
+.kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:4px solid var(--green-700);position:relative;overflow:hidden}
+.kpi.gold{border-top-color:var(--gold)} .kpi.blue{border-top-color:var(--blue)}
+.kpi.red{border-top-color:var(--red)} .kpi.amber{border-top-color:var(--amber)} .kpi.teal{border-top-color:var(--teal)}
+.kpi .k-label{font-size:11.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:600}
+.kpi .k-value{font-size:24px;font-weight:800;color:var(--green-950);margin:4px 0 2px}
+.kpi .k-sub{font-size:12.5px;color:var(--muted)}
+.kpi .k-icon{position:absolute;right:10px;top:12px;width:38px;height:38px;border-radius:12px;background:var(--green-50);display:flex;align-items:center;justify-content:center}
+.kpi .k-icon svg{width:22px;height:22px}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;margin-bottom:18px}
+.card h4{font-size:15.5px;color:var(--green-900);margin-bottom:4px}
+.card .card-sub{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-2-1{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:1080px){.grid-2,.grid-2-1{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.grid-3{grid-template-columns:1fr}}
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 15px;border-radius:10px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.15s;white-space:nowrap}
+.btn svg{width:16px;height:16px}
+.btn:hover{border-color:var(--green-600);color:var(--green-800);box-shadow:var(--shadow)}
+.btn.primary{background:linear-gradient(180deg,var(--green-700),var(--green-800));color:#fff;border-color:var(--green-800)}
+.btn.primary:hover{filter:brightness(1.08);color:#fff}
+.btn.gold{background:linear-gradient(180deg,#d9b83a,var(--gold));color:#20301a;border-color:var(--gold-dark)}
+.btn.gold:hover{filter:brightness(1.05)}
+.btn.danger{background:#fff;color:var(--red);border-color:#efb9b9}
+.btn.danger:hover{background:var(--red-bg);border-color:var(--red)}
+.btn.sm{padding:5px 10px;font-size:12.5px;border-radius:8px}
+.btn.icon-only{padding:7px}
+/* ---------- Tables ---------- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar input[type=search],.toolbar select{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.toolbar input[type=search]{min-width:220px;flex:1}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;background:#fff;min-width:760px}
+.tbl th{background:var(--green-900);color:#fff;text-align:left;padding:10px 12px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;position:sticky;top:0}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:hover td{background:#f6faf3}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tfoot td{background:var(--green-50);font-weight:700;border-top:2px solid var(--green-700)}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.b-paid,.b-released,.b-completed{background:#dcefe0;color:#1b5e20}
+.b-pending,.b-partial{background:#fff0d6;color:#8a5a00}
+.b-cancelled{background:#fde2e2;color:#a11}
+.b-sale{background:var(--blue-bg);color:var(--blue)}
+.b-subsidy{background:#f3e5f5;color:#6a1b9a}
+.b-dry{background:#e0f2f1;color:var(--teal)} .b-fresh{background:#e8f5e9;color:#2e7d32}
+.row-actions{display:flex;gap:5px;flex-wrap:wrap}
+/* ---------- Forms ---------- */
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.form-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.form-grid.cols-4{grid-template-columns:repeat(4,1fr)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:700;color:var(--green-900);text-transform:uppercase;letter-spacing:.4px}
+.field label .req{color:var(--red)}
+.field input,.field select,.field textarea{border:1px solid #cfd8cf;border-radius:9px;padding:9px 11px;font-size:14px;font-family:inherit;background:#fff;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(46,125,50,.35);border-color:var(--green-600)}
+.field input[readonly]{background:#f3f6f1;color:#374151}
+.field .hint{font-size:11.5px;color:var(--muted)}
+.calc-box{background:var(--green-50);border:1px dashed var(--green-600);border-radius:12px;padding:12px 14px;margin-top:6px}
+.calc-row{display:flex;justify-content:space-between;font-size:13.5px;padding:2px 0}
+.calc-row.total{font-size:17px;font-weight:800;color:var(--green-900);border-top:1px solid var(--green-600);margin-top:6px;padding-top:8px}
+.autofill-note{background:var(--blue-bg);border:1px solid #90caf9;color:#0d47a1;border-radius:10px;padding:8px 12px;font-size:12.5px;margin-bottom:10px;display:none}
+.autofill-note.show{display:block}
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:6px;background:#dde6da;padding:4px;border-radius:12px;width:max-content;max-width:100%;flex-wrap:wrap}
+.tab{border:0;background:transparent;padding:8px 18px;border-radius:9px;font-size:13.5px;font-weight:700;color:#4b5b4c;cursor:pointer}
+.tab.active{background:#fff;color:var(--green-900);box-shadow:var(--shadow)}
+/* ---------- Modals ---------- */
+.modal-back{position:fixed;inset:0;background:rgba(13,43,20,.55);display:none;align-items:flex-start;justify-content:center;padding:26px 14px;z-index:100;overflow-y:auto}
+.modal-back.open{display:flex}
+.modal{background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);width:100%;max-width:920px;animation:pop .2s ease}
+.modal.narrow{max-width:560px}
+@keyframes pop{from{transform:scale(.97);opacity:0}to{transform:none;opacity:1}}
+.modal-head{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--green-50),#fff);border-radius:16px 16px 0 0}
+.modal-head h3{font-size:16.5px;color:var(--green-900);flex:1}
+.modal-x{border:0;background:#eef2ea;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;color:#444}
+.modal-x:hover{background:#dfe7dc}
+.modal-body{padding:20px}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+.section-title{font-size:13px;font-weight:800;color:var(--gold-dark);text-transform:uppercase;letter-spacing:1px;margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid var(--gold)}
+.section-title:first-child{margin-top:0}
+/* ---------- Toast ---------- */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--green-950);color:#fff;padding:12px 18px;border-radius:12px;font-size:13.5px;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:slidein .25s ease;max-width:340px}
+.toast.err{background:#7f1d1d}
+@keyframes slidein{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+/* ---------- Docs ---------- */
+.doc-layout{display:grid;grid-template-columns:340px 1fr;gap:18px}
+@media(max-width:1080px){.doc-layout{grid-template-columns:1fr}}
+.tpl-item{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#fff}
+.tpl-item.active{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,162,39,.3)}
+.tpl-item h5{font-size:14px;color:var(--green-900)}
+.tpl-item p{font-size:12px;color:var(--muted)}
+.paper{background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:var(--shadow);padding:40px 44px;min-height:480px;color:#111}
+.paper h1,.paper h2,.paper h3{color:#111}
+.ph-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.ph-table td{border:1px solid var(--line);padding:5px 9px}
+.ph-table td:first-child{font-family:Consolas,monospace;background:#f6f8f5;color:#7b1fa2;font-weight:700;white-space:nowrap}
+textarea.code{font-family:Consolas,Menlo,monospace;font-size:12.5px;min-height:220px}
+/* ---------- Misc ---------- */
+.alert{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:8px;border:1px solid}
+.alert.warn{background:var(--amber-bg);border-color:#ffcc80;color:#5d3a00}
+.alert.info{background:var(--blue-bg);border-color:#90caf9;color:#0d47a1}
+.alert.ok{background:var(--green-100);border-color:#a5d6a7;color:#1b5e20}
+.legend-dot{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px}
+.list-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.list-item:last-child{border-bottom:0}
+.progress{height:9px;background:#e6ebe3;border-radius:6px;overflow:hidden;margin-top:5px}
+.progress > div{height:100%;background:linear-gradient(90deg,var(--green-600),var(--gold));border-radius:6px}
+.cat-card{background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;border-left:5px solid var(--green-700)}
+.cat-card h5{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.cat-card .n{font-size:26px;font-weight:800;color:var(--green-950)}
+.empty{padding:36px 16px;text-align:center;color:var(--muted)}
+.empty svg{width:52px;height:52px;opacity:.35;margin-bottom:8px}
+footer.app-foot{text-align:center;color:var(--muted);font-size:12px;padding:18px 10px 30px}
+#printArea{display:none}
+@media print{
+  body{background:#fff}
+  .app,.modal-back,#toasts,.no-print{display:none!important}
+  #printArea{display:block!important;color:#000}
+  #printArea .paper{box-shadow:none;border:0;padding:0;min-height:0}
+}
+@media(max-width:920px){
+  .sidebar{width:180px}
+  .brand{padding:12px 9px}
+  .brand h1{font-size:12px}
+  .nav{padding:8px 7px}
+  .nav-label{padding:8px 8px 4px;font-size:9px}
+  .nav-btn{padding:6.5px 9px;font-size:12px;gap:7px}
+  .nav-btn svg{width:16px;height:16px}
+  .side-foot{padding:9px 11px;font-size:10px}
+  .form-grid,.form-grid.cols-2,.form-grid.cols-4{grid-template-columns:1fr}
+  .content{padding:14px}
+  .paper{padding:24px 18px}
+}
+@media(max-width:600px){
+  .sidebar{width:148px}
+  .brand{padding:9px 6px;gap:7px}
+  .brand-mark{width:38px;height:38px}
+  .brand-mark svg{width:22px;height:22px}
+  .brand h1{font-size:10.5px}
+  .brand small{font-size:8.5px;letter-spacing:.3px}
+  .nav{padding:6px 5px}
+  .nav-label{padding:7px 6px 3px;font-size:8.5px}
+  .nav-btn{padding:6px 7px;font-size:11.5px;gap:6px}
+  .nav-btn svg{width:15px;height:15px}
+  .side-foot{padding:8px 6px;font-size:9px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#20301a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8C12 5 10 2.5 7 2c0 3 1 5.5 5 6z"/><path d="M12 8c0-3 2-5.5 5-6 0 3-1 5.5-5 6z"/><path d="M12 14c-2.5 0-4.5-1-5.5-3.5C9 10 11 11 12 14z"/><path d="M12 14c2.5 0 4.5-1 5.5-3.5C15 10 13 11 12 14z"/><path d="M12 19c-2.5 0-4.5-1-5.5-3.5C9 15 11 16 12 19z"/><path d="M12 19c2.5 0 4.5-1 5.5-3.5C15 15 13 16 12 19z"/></svg>
+      </div>
+      <h1>ALCALA <span>RICE</span> PROCESSING CENTER<small>LGU Alcala &bull; Financial Monitoring</small></h1>
+    </div>
+    <nav class="nav">
+      <div class="nav-label">Overview</div>
+      <button class="nav-btn active" data-view="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Dashboard</button>
+      <div class="nav-label">Transactions</div>
+      <button class="nav-btn" data-view="palay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V8"/><path d="M12 8C12 5 10 2.5 7 2c0 3 1 5.5 5 6z"/><path d="M12 8c0-3 2-5.5 5-6 0 3-1 5.5-5 6z"/></svg>Palay Buying</button>
+      <button class="nav-btn" data-view="rice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h15l-1.5 9h-12z"/><path d="M6 8l-1-4H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>Rice Marketing &amp; Subsidy</button>
+      <button class="nav-btn" data-view="beneficiaries"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M16 15.2c2.6.3 4.7 1.9 5.5 4.8"/></svg>Beneficiaries</button>
+      <button class="nav-btn" data-view="inventory"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>Inventory &amp; Milling</button>
+      <div class="nav-label">Outputs</div>
+      <button class="nav-btn" data-view="documents"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h7M9 17h7"/></svg>Documents &amp; Templates</button>
+      <button class="nav-btn" data-view="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Reports</button>
+      <button class="nav-btn" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 2h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 22h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.06-.4.1-.8.1-1.2z"/></svg>Settings &amp; Data</button>
+    </nav>
+    <div class="side-foot">ARPC Monitoring System v1.1<br>Side menu always visible<br>Data is stored locally in this browser.</div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <header class="topbar">
+      <button class="menu-btn" id="menuBtn" title="Menu">&#9776;</button>
+      <h2 id="topbarTitle">Dashboard</h2>
+      <span class="date-chip" id="todayChip"></span>
+      <button class="btn sm primary no-print" onclick="openPalayModal()">+ Palay</button>
+      <button class="btn sm gold no-print" onclick="openRiceModal()">+ Rice</button>
+    </header>
+    <main class="content">
+
+      <!-- ======== DASHBOARD ======== -->
+      <section id="view-dashboard" class="view active">
+        <div class="page-head">
+          <div><h3>Dashboard</h3><p>Financial summary, stocks, and beneficiary statistics &mdash; <span id="dashPeriodLabel"></span></p></div>
+          <div class="spacer"></div>
+          <select id="dashYear" onchange="renderDashboard()" title="Year"></select>
+          <select id="dashMonth" onchange="renderDashboard()" title="Month">
+            <option value="">Whole year</option>
+            <option value="0">January</option><option value="1">February</option><option value="2">March</option>
+            <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+            <option value="6">July</option><option value="7">August</option><option value="8" selected>September</option>
+            <option value="9">October</option><option value="10">November</option><option value="11">December</option>
+          </select>
+        </div>
+        <div class="kpi-grid" id="kpiRow"></div>
+        <div class="grid-2-1">
+          <div class="card">
+            <h4>Monthly Volume &mdash; Palay Procured vs Rice Released (kg)</h4>
+            <div class="card-sub">Last 6 months &bull; bars show kilograms</div>
+            <div id="chartMonthly"></div>
+          </div>
+          <div class="card">
+            <h4>Beneficiaries by Sector</h4>
+            <div class="card-sub">Unique recipients of rice subsidy</div>
+            <div id="chartDonut"></div>
+            <div id="donutLegend" style="margin-top:10px"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h4>Cash Flow Snapshot</h4>
+            <div class="card-sub">Palay payouts vs rice sales collection (selected period)</div>
+            <div id="cashFlowBox"></div>
+          </div>
+          <div class="card">
+            <h4>Attention Needed</h4>
+            <div class="card-sub">Pending items and low-stock alerts</div>
+            <div id="alertsList"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h4>Recent Palay Purchases</h4>
+            <div class="card-sub">Latest 5 transactions</div>
+            <div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Farmer</th><th class="num">Kg</th><th class="num">Net Payable</th><th>Status</th></tr></thead><tbody id="recentPalayBody"></tbody></table></div>
+          </div>
+          <div class="card">
+            <h4>Recent Rice Releases</h4>
+            <div class="card-sub">Latest 5 sales / subsidy releases</div>
+            <div class="table-wrap"><table class="tbl"><thead><tr><th>Date</th><th>Buyer / Recipient</th><th class="num">Kg</th><th class="num">Amount</th><th>Type</th></tr></thead><tbody id="recentRiceBody"></tbody></table></div>
+          </div>
+        </div>
+        <div class="card">
+          <h4>Top Farmer-Suppliers (by volume, selected period)</h4>
+          <div class="card-sub">Ranked by kilograms of palay sold to the Center</div>
+          <div id="topFarmersList"></div>
+        </div>
+      </section>
+
+      <!-- ======== PALAY BUYING ======== -->
+      <section id="view-palay" class="view">
+        <div class="page-head">
+          <div><h3>Palay Buying Transactions</h3><p>Recording, pricing &amp; computation of palay procured from farmers. Select an existing farmer name to <b>auto-fill</b> address, age &amp; RSBSA no.</p></div>
+          <div class="spacer"></div>
+          <button class="btn" onclick="exportCSV('palay')">Export CSV</button>
+          <button class="btn primary" onclick="openPalayModal()">+ New Purchase</button>
+        </div>
+        <div class="kpi-grid" id="palayStats"></div>
+        <div class="card">
+          <div class="toolbar">
+            <input type="search" id="palaySearch" placeholder="Search farmer, txn no., RSBSA, barangay..." oninput="renderPalay()">
+            <select id="palayStatusFilter" onchange="renderPalay()"><option value="">All statuses</option><option>Paid</option><option>Pending</option><option>Partial</option><option>Cancelled</option></select>
+            <select id="palayMonthFilter" onchange="renderPalay()"><option value="">All months</option></select>
+            <span class="hint" id="palayCount" style="margin-left:auto;font-size:12.5px;color:var(--muted)"></span>
+          </div>
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr><th>Txn No.</th><th>Date</th><th>Farmer / RSBSA</th><th>Variety / Class</th><th class="num">Kg</th><th class="num">MC%</th><th class="num">&#8369;/kg</th><th class="num">Net Payable</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="palayTableBody"></tbody><tfoot id="palayTableFoot"></tfoot>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- ======== RICE MARKETING ======== -->
+      <section id="view-rice" class="view">
+        <div class="page-head">
+          <div><h3>Rice Marketing &amp; Subsidy Distribution</h3><p>Sales to buyers and rice subsidy releases to farmers, PWDs, senior citizens, poor &amp; marginalized families.</p></div>
+          <div class="spacer"></div>
+          <button class="btn" onclick="exportCSV('rice')">Export CSV</button>
+          <button class="btn gold" onclick="openRiceModal()">+ New Sale / Release</button>
+        </div>
+        <div class="kpi-grid" id="riceStats"></div>
+        <div class="card">
+          <div class="toolbar">
+            <div class="tabs">
+              <button class="tab active" data-rtab="" onclick="setRiceTab('',this)">All</button>
+              <button class="tab" data-rtab="sale" onclick="setRiceTab('sale',this)">Sales</button>
+              <button class="tab" data-rtab="subsidy" onclick="setRiceTab('subsidy',this)">Subsidy</button>
+            </div>
+            <input type="search" id="riceSearch" placeholder="Search buyer/recipient, txn no., program..." oninput="renderRice()">
+            <select id="riceMonthFilter" onchange="renderRice()"><option value="">All months</option></select>
+            <span id="riceCount" style="margin-left:auto;font-size:12.5px;color:var(--muted)"></span>
+          </div>
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr><th>Txn No.</th><th>Date</th><th>Buyer / Recipient</th><th>Program / Category</th><th class="num">Kg</th><th class="num">&#8369;/kg</th><th class="num">Amount</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="riceTableBody"></tbody><tfoot id="riceTableFoot"></tfoot>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- ======== BENEFICIARIES ======== -->
+      <section id="view-beneficiaries" class="view">
+        <div class="page-head">
+          <div><h3>Beneficiaries</h3><p>Master registry of farmers, buyers &amp; subsidy recipients. Counts update automatically from transactions.</p></div>
+          <div class="spacer"></div>
+          <button class="btn" onclick="exportCSV('beneficiaries')">Export CSV</button>
+        </div>
+        <div class="grid-3" id="benCards" style="margin-bottom:18px"></div>
+        <div class="card">
+          <div class="toolbar">
+            <input type="search" id="benSearch" placeholder="Search name, address, category..." oninput="renderBeneficiaries()">
+            <select id="benCatFilter" onchange="renderBeneficiaries()"><option value="">All categories</option></select>
+            <span id="benCount" style="margin-left:auto;font-size:12.5px;color:var(--muted)"></span>
+          </div>
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr><th>Name</th><th>Address / Barangay</th><th class="num">Age</th><th>Sex</th><th>RSBSA / ID</th><th>Category</th><th class="num">Palay Sold (kg)</th><th class="num">Rice Received (kg)</th></tr></thead>
+            <tbody id="benTableBody"></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- ======== INVENTORY ======== -->
+      <section id="view-inventory" class="view">
+        <div class="page-head">
+          <div><h3>Inventory &amp; Milling</h3><p>Palay stocks, milling conversion (palay&rarr;rice), and milled-rice stocks. Default recovery rate is set in Settings.</p></div>
+          <div class="spacer"></div>
+          <button class="btn primary" onclick="openMillModal()">+ Record Milling</button>
+        </div>
+        <div class="kpi-grid" id="invStats"></div>
+        <div class="card">
+          <h4>Milling History</h4>
+          <div class="card-sub">Each batch converts palay stock into milled-rice stock</div>
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr><th>Batch No.</th><th>Date</th><th class="num">Palay In (kg)</th><th class="num">Rice Out (kg)</th><th class="num">Recovery %</th><th>Remarks</th><th>Actions</th></tr></thead>
+            <tbody id="millingTableBody"></tbody><tfoot id="millingTableFoot"></tfoot>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- ======== DOCUMENTS ======== -->
+      <section id="view-documents" class="view">
+        <div class="page-head">
+          <div><h3>Documents &amp; Templates</h3><p>Auto-generate Payment Slips &amp; Acknowledgement Receipts from any transaction. Paste your official template later &mdash; <b>{{placeholders}}</b> fill in automatically.</p></div>
+          <div class="spacer"></div>
+          <button class="btn primary" onclick="printDocPreview()">Print Preview</button>
+        </div>
+        <div class="doc-layout">
+          <div>
+            <div class="card">
+              <h4>1 &bull; Generate Document</h4>
+              <div class="card-sub">Pick a transaction, then a template</div>
+              <div class="field" style="margin-bottom:10px"><label>Transaction type</label>
+                <select id="docModule" onchange="refreshDocTxns()"><option value="palay">Palay Buying</option><option value="rice">Rice Sale / Subsidy</option></select>
+              </div>
+              <div class="field" style="margin-bottom:10px"><label>Transaction</label><select id="docTxn" onchange="renderDocPreview()"></select></div>
+              <div class="field"><label>Template</label><select id="docTemplate" onchange="renderDocPreview()"></select></div>
+            </div>
+            <div class="card">
+              <h4>2 &bull; Templates</h4>
+              <div class="card-sub">Built-in forms + your own. Click to edit.</div>
+              <div id="templateList"></div>
+              <button class="btn sm" onclick="newTemplate()">+ Blank Template</button>
+            </div>
+            <div class="card">
+              <h4>Placeholder Reference</h4>
+              <div class="card-sub">Type any of these in a template; values auto-fill from the transaction.</div>
+              <div style="max-height:260px;overflow:auto"><table class="ph-table" id="phRef"></table></div>
+            </div>
+          </div>
+          <div>
+            <div class="card">
+              <h4>Live Preview</h4>
+              <div class="card-sub">Exactly what will print &mdash; duplicate entries auto-populate from the selected transaction.</div>
+              <div class="paper" id="docPreview"></div>
+            </div>
+            <div class="card" id="tplEditorCard" style="display:none">
+              <h4>Edit Template: <span id="tplEditName"></span></h4>
+              <div class="card-sub">Paste your official LGU template here. Keep the <b>{{placeholders}}</b> where values should appear. Basic HTML is allowed.</div>
+              <div class="form-grid cols-2" style="margin-bottom:10px">
+                <div class="field"><label>Template name</label><input id="tplName"></div>
+                <div class="field"><label>Applies to</label><select id="tplKind"><option value="palay">Palay Buying</option><option value="rice">Rice Sale / Subsidy</option><option value="both">Both</option></select></div>
+              </div>
+              <div class="field"><label>Template body (HTML + {{placeholders}})</label><textarea id="tplBody" class="code" rows="12" oninput="renderDocPreview()"></textarea></div>
+              <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                <button class="btn primary sm" onclick="saveTemplate()">Save Template</button>
+                <button class="btn sm" onclick="closeTplEditor()">Close</button>
+                <button class="btn danger sm" id="tplDeleteBtn" onclick="deleteTemplate()">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== REPORTS ======== -->
+      <section id="view-reports" class="view">
+        <div class="page-head">
+          <div><h3>Reports</h3><p>Monthly financial &amp; beneficiary summaries. Export to CSV for Excel, or print for records.</p></div>
+          <div class="spacer"></div>
+          <select id="repYear" onchange="renderReports()"></select>
+          <button class="btn" onclick="window.print()">Print Report</button>
+        </div>
+        <div class="kpi-grid" id="repSummary"></div>
+        <div class="card">
+          <h4>Monthly Summary &mdash; <span id="repYearLabel"></span></h4>
+          <div class="card-sub">Per-month totals of procurement, sales, subsidy &amp; beneficiaries</div>
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr><th>Month</th><th class="num">Palay (kg)</th><th class="num">Palay Cost (&#8369;)</th><th class="num">Rice Sold (kg)</th><th class="num">Sales (&#8369;)</th><th class="num">Subsidy (kg)</th><th class="num">Beneficiaries</th><th class="num">Net Cash (&#8369;)</th></tr></thead>
+            <tbody id="repMonthlyBody"></tbody><tfoot id="repMonthlyFoot"></tfoot>
+          </table></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><h4>Data Exports (CSV / Excel-ready)</h4><div class="card-sub">One click per file</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn sm" onclick="exportCSV('palay')">Palay Transactions</button>
+              <button class="btn sm" onclick="exportCSV('rice')">Rice Transactions</button>
+              <button class="btn sm" onclick="exportCSV('beneficiaries')">Beneficiaries</button>
+              <button class="btn sm" onclick="exportCSV('milling')">Milling Batches</button>
+              <button class="btn sm" onclick="exportCSV('monthly')">Monthly Summary</button>
+            </div>
+          </div>
+          <div class="card"><h4>How to use these reports</h4><div class="card-sub">Suggested workflow</div>
+            <div class="list-item"><span>1. Filter the Dashboard by month for the period-end snapshot.</span></div>
+            <div class="list-item"><span>2. Export CSV files and consolidate in Excel for COA-style reports.</span></div>
+            <div class="list-item"><span>3. Print Payment Slips &amp; Receipts from Documents for each payee.</span></div>
+            <div class="list-item"><span>4. Back up data monthly via Settings &rarr; Export Backup (JSON).</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======== SETTINGS ======== -->
+      <section id="view-settings" class="view">
+        <div class="page-head"><div><h3>Settings &amp; Data Management</h3><p>Center profile, pricing defaults, and backup controls.</p></div></div>
+        <div class="grid-2">
+          <div class="card"><h4>Center Profile</h4><div class="card-sub">Appears on documents &amp; reports</div>
+            <div class="form-grid cols-2">
+              <div class="field"><label>Center name</label><input id="setCenter"></div>
+              <div class="field"><label>LGU / Office</label><input id="setLgu"></div>
+              <div class="field full"><label>Address</label><input id="setAddress"></div>
+              <div class="field"><label>Contact / Telephone</label><input id="setContact"></div>
+              <div class="field"><label>Officer-in-charge (signatory)</label><input id="setOfficer"></div>
+            </div>
+          </div>
+          <div class="card"><h4>Pricing &amp; Conversion Defaults</h4><div class="card-sub">Used for suggested prices &amp; auto-computation</div>
+            <div class="form-grid cols-2">
+              <div class="field"><label>Buying price &mdash; fresh/wet palay (&#8369;/kg)</label><input type="number" step="0.01" id="setPriceFresh"></div>
+              <div class="field"><label>Buying price &mdash; dry palay (&#8369;/kg)</label><input type="number" step="0.01" id="setPriceDry"></div>
+              <div class="field"><label>MC threshold for "dry" (%)</label><input type="number" step="0.1" id="setMcThresh"></div>
+              <div class="field"><label>Selling price &mdash; milled rice (&#8369;/kg)</label><input type="number" step="0.01" id="setPriceRice"></div>
+              <div class="field"><label>Milling recovery rate (%)</label><input type="number" step="0.1" id="setRecovery"></div>
+              <div class="field"><label>Kilos per sack (kg)</label><input type="number" step="1" id="setKgSack"></div>
+              <div class="field"><label>Revolving fund / starting cash (&#8369;)</label><input type="number" step="0.01" id="setFund"></div>
+              <div class="field"><label>Low-stock alert below (kg of rice)</label><input type="number" step="1" id="setLowStock"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card"><div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn primary" onclick="saveSettings()">Save Settings</button>
+        </div></div>
+        <div class="card"><h4>Data Management</h4><div class="card-sub">All records are stored locally in this browser (offline-capable). Back up regularly.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" onclick="exportJSON()">&#8681; Export Backup (JSON)</button>
+            <button class="btn" onclick="document.getElementById('importFile').click()">&#8682; Import Backup</button>
+            <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)">
+            <button class="btn" onclick="loadDemo(true)">Reload Demo Data</button>
+            <button class="btn danger" onclick="resetAll()">Clear All Data</button>
+          </div>
+          <p style="margin-top:10px;font-size:12.5px;color:var(--muted)" id="dataStats"></p>
+        </div>
+      </section>
+
+      <footer class="app-foot">Alcala Rice Processing Center &bull; LGU Alcala &bull; Financial Recording &amp; Monitoring System &mdash; for official use<br><span style="color:var(--gold-dark);font-weight:700;letter-spacing:.5px">Developed by: ENGR. JOHN MARK C. CONTILLO</span></footer>
+    </main>
+  </div>
+</div>
+
+<!-- ======== PALAY MODAL ======== -->
+<div class="modal-back" id="palayModal"><div class="modal">
+  <div class="modal-head"><h3 id="palayModalTitle">New Palay Purchase</h3><button class="modal-x" onclick="closeModal('palayModal')">&times;</button></div>
+  <div class="modal-body">
+    <input type="hidden" id="p_id">
+    <div class="section-title">Farmer Information <span style="font-weight:400;text-transform:none;letter-spacing:0">(type an existing name to auto-fill &#10003;)</span></div>
+    <div class="autofill-note" id="p_autofill">&#10003; Existing farmer found &mdash; address, age &amp; RSBSA auto-filled. Duplicate entries will reuse these details.</div>
+    <div class="form-grid">
+      <div class="field"><label>Transaction date <span class="req">*</span></label><input type="date" id="p_date"></div>
+      <div class="field"><label>Transaction no.</label><input id="p_txn" readonly></div>
+      <div class="field"><label>Payment status</label><select id="p_status"><option>Paid</option><option>Pending</option><option>Partial</option><option>Cancelled</option></select></div>
+      <div class="field"><label>Farmer name <span class="req">*</span></label><input id="p_name" list="farmerList" autocomplete="off" placeholder="e.g. Juan D. Dela Cruz" oninput="autofillFarmer()"><datalist id="farmerList"></datalist></div>
+      <div class="field"><label>Address / Barangay <span class="req">*</span></label><input id="p_address" placeholder="e.g. Brgy. San Esteban, Alcala"></div>
+      <div class="field"><label>Age</label><input type="number" id="p_age" min="1" max="120"></div>
+      <div class="field"><label>Sex</label><select id="p_sex"><option>Male</option><option>Female</option></select></div>
+      <div class="field"><label>Contact no.</label><input id="p_contact" placeholder="09xx-xxx-xxxx"></div>
+      <div class="field"><label>RSBSA number</label><input id="p_rsbsa" placeholder="e.g. 02-15-002-000123"></div>
+    </div>
+    <div class="section-title">Palay Details &amp; Computation</div>
+    <div class="form-grid">
+      <div class="field"><label>Rice variety</label><input id="p_variety" list="varietyList" placeholder="e.g. NSIC Rc 222"><datalist id="varietyList"><option>NSIC Rc 222</option><option>NSIC Rc 160</option><option>NSIC Rc 216</option><option>NSIC Rc 402</option><option>Dinorado</option><option>Jasmine</option></datalist></div>
+      <div class="field"><label>Classification</label><select id="p_class"><option>Fresh / Wet</option><option>Dry</option></select></div>
+      <div class="field"><label>Net weight (kg) <span class="req">*</span></label><input type="number" step="0.01" id="p_weight" oninput="calcPalay()"></div>
+      <div class="field"><label>Moisture content (%)</label><input type="number" step="0.1" id="p_moisture" oninput="suggestPrice();calcPalay()"></div>
+      <div class="field"><label>Price per kg (&#8369;) <span class="req">*</span></label><input type="number" step="0.01" id="p_price" oninput="calcPalay()"><span class="hint" id="p_suggest"></span></div>
+      <div class="field"><label>Deductions (&#8369;)</label><input type="number" step="0.01" id="p_deduct" value="0" oninput="calcPalay()"></div>
+      <div class="field"><label>Deduction details</label><input id="p_deductNote" placeholder="e.g. sack, drying fee"></div>
+      <div class="field"><label>Mode of payment</label><select id="p_mode"><option>Cash</option><option>Check</option><option>Bank Transfer</option></select></div>
+      <div class="field full"><label>Remarks</label><input id="p_remarks"></div>
+    </div>
+    <div class="calc-box">
+      <div class="calc-row"><span>Gross amount (<span id="p_cW">0</span> kg &times; &#8369;<span id="p_cP">0</span>)</span><b>&#8369;<span id="p_cG">0.00</span></b></div>
+      <div class="calc-row"><span>Less: deductions</span><b>&minus; &#8369;<span id="p_cD">0.00</span></b></div>
+      <div class="calc-row total"><span>NET PAYABLE</span><span>&#8369;<span id="p_cN">0.00</span></span></div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:4px">In words: <i id="p_cWords"></i></div>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="closeModal('palayModal')">Cancel</button>
+    <button class="btn gold" onclick="savePalay(true)">Save &amp; Print Slip</button>
+    <button class="btn primary" onclick="savePalay(false)">Save Transaction</button>
+  </div>
+</div></div>
+
+<!-- ======== RICE MODAL ======== -->
+<div class="modal-back" id="riceModal"><div class="modal">
+  <div class="modal-head"><h3 id="riceModalTitle">New Rice Sale / Release</h3><button class="modal-x" onclick="closeModal('riceModal')">&times;</button></div>
+  <div class="modal-body">
+    <input type="hidden" id="r_id">
+    <div class="section-title">Buyer / Recipient Information <span style="font-weight:400;text-transform:none;letter-spacing:0">(type an existing name to auto-fill &#10003;)</span></div>
+    <div class="autofill-note" id="r_autofill">&#10003; Existing record found &mdash; address, age &amp; category auto-filled.</div>
+    <div class="form-grid">
+      <div class="field"><label>Transaction type <span class="req">*</span></label><select id="r_type" onchange="riceTypeChanged()"><option value="sale">Sale (paid)</option><option value="subsidy">Subsidy (free/distributed)</option></select></div>
+      <div class="field"><label>Transaction date <span class="req">*</span></label><input type="date" id="r_date"></div>
+      <div class="field"><label>Transaction no.</label><input id="r_txn" readonly></div>
+      <div class="field"><label>Full name <span class="req">*</span></label><input id="r_name" list="buyerList" autocomplete="off" oninput="autofillBuyer()"><datalist id="buyerList"></datalist></div>
+      <div class="field"><label>Address / Barangay <span class="req">*</span></label><input id="r_address"></div>
+      <div class="field"><label>Age</label><input type="number" id="r_age" min="1" max="120"></div>
+      <div class="field"><label>Sex</label><select id="r_sex"><option>Male</option><option>Female</option></select></div>
+      <div class="field"><label>Contact no.</label><input id="r_contact"></div>
+      <div class="field"><label>Category <span class="req">*</span></label><select id="r_category"><option>Farmer</option><option>Poor / Marginalized Family</option><option>Senior Citizen</option><option>PWD</option><option>4Ps Member</option><option>Solo Parent</option><option>Walk-in Buyer</option><option>Institutional Buyer</option><option>LGU / Barangay</option><option>Other</option></select></div>
+      <div class="field"><label>ID / RSBSA no.</label><input id="r_idno"></div>
+      <div class="field"><label>Program</label><input id="r_program" list="programList" placeholder="e.g. Rice Subsidy Program"><datalist id="programList"><option>Regular Sale</option><option>Rice Subsidy Program</option><option>Senior Citizens Assistance</option><option>PWD Assistance</option><option>4Ps Support</option><option>Calamity / Relief Assistance</option></datalist></div>
+      <div class="field"><label>Status</label><select id="r_status"><option>Completed</option><option>Released</option><option>Pending</option><option>Partial</option><option>Cancelled</option></select></div>
+    </div>
+    <div class="section-title">Rice Details &amp; Computation</div>
+    <div class="form-grid">
+      <div class="field"><label>Rice variety</label><input id="r_variety" list="varietyList2" placeholder="e.g. Well-milled Rc 222"><datalist id="varietyList2"><option>Well-milled Rc 222</option><option>Well-milled Rc 160</option><option>Regular-milled</option><option>Dinorado Special</option></datalist></div>
+      <div class="field"><label>No. of sacks</label><input type="number" step="0.5" id="r_sacks" oninput="calcRice(true)"></div>
+      <div class="field"><label>Kg per sack</label><input type="number" step="1" id="r_kgSack" oninput="calcRice(true)"></div>
+      <div class="field"><label>Total kilos <span class="req">*</span></label><input type="number" step="0.01" id="r_kilos" oninput="calcRice(false)"></div>
+      <div class="field"><label>Price per kg (&#8369;)</label><input type="number" step="0.01" id="r_price" oninput="calcRice(false)"></div>
+      <div class="field"><label>Discount / subsidy (&#8369;)</label><input type="number" step="0.01" id="r_discount" value="0" oninput="calcRice(false)"></div>
+      <div class="field"><label>Mode of payment</label><select id="r_mode"><option>Cash</option><option>Check</option><option>Bank Transfer</option><option>Free (Subsidy)</option></select></div>
+      <div class="field full"><label>Remarks</label><input id="r_remarks"></div>
+    </div>
+    <div class="calc-box">
+      <div class="calc-row"><span>Gross amount (<span id="r_cK">0</span> kg &times; &#8369;<span id="r_cP">0</span>)</span><b>&#8369;<span id="r_cG">0.00</span></b></div>
+      <div class="calc-row"><span>Less: discount / subsidy</span><b>&minus; &#8369;<span id="r_cD">0.00</span></b></div>
+      <div class="calc-row total"><span id="r_totalLabel">AMOUNT DUE</span><span>&#8369;<span id="r_cN">0.00</span></span></div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:4px">In words: <i id="r_cWords"></i></div>
+    </div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="closeModal('riceModal')">Cancel</button>
+    <button class="btn gold" onclick="saveRice(true)">Save &amp; Print Receipt</button>
+    <button class="btn primary" onclick="saveRice(false)">Save Transaction</button>
+  </div>
+</div></div>
+
+<!-- ======== MILLING MODAL ======== -->
+<div class="modal-back" id="millModal"><div class="modal narrow">
+  <div class="modal-head"><h3>Record Milling Batch</h3><button class="modal-x" onclick="closeModal('millModal')">&times;</button></div>
+  <div class="modal-body">
+    <input type="hidden" id="m_id">
+    <div class="form-grid cols-2">
+      <div class="field"><label>Milling date <span class="req">*</span></label><input type="date" id="m_date"></div>
+      <div class="field"><label>Batch no.</label><input id="m_txn" readonly></div>
+      <div class="field"><label>Palay input (kg) <span class="req">*</span></label><input type="number" step="0.01" id="m_palay" oninput="calcMill()"></div>
+      <div class="field"><label>Rice output (kg) <span class="req">*</span></label><input type="number" step="0.01" id="m_rice" oninput="calcMill(false)"></div>
+      <div class="field full"><label>Recovery rate (%) &mdash; auto</label><input id="m_recovery" readonly></div>
+      <div class="field full"><label>Remarks</label><input id="m_remarks" placeholder="e.g. Batch for subsidy program"></div>
+    </div>
+    <div class="alert info" style="margin-top:12px" id="m_hint"></div>
+  </div>
+  <div class="modal-foot">
+    <button class="btn" onclick="closeModal('millModal')">Cancel</button>
+    <button class="btn primary" onclick="saveMill()">Save Batch</button>
+  </div>
+</div></div>
+
+<div id="toasts"></div>
+<div id="printArea"></div>
+<script>
+"use strict";
+/* ================= UTILITIES ================= */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const peso=n=>"₱"+Number(n||0).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});
+const num=n=>Number(n||0).toLocaleString("en-PH",{maximumFractionDigits:2});
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const fdate=d=>{if(!d)return"";const t=new Date(d+"T00:00:00");return isNaN(t)?d:t.toLocaleDateString("en-PH",{year:"numeric",month:"short",day:"numeric"});};
+const todayStr=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");};
+function toast(msg,err){const t=document.createElement("div");t.className="toast"+(err?" err":"");t.textContent=msg;$("toasts").appendChild(t);setTimeout(()=>{t.style.opacity="0";t.style.transition=".4s";setTimeout(()=>t.remove(),400);},2800);}
+function uid(p){return (p||"id")+"-"+Date.now().toString(36)+"-"+Math.floor(Math.random()*1e6).toString(36);}
+const ONES=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+const TENS=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+function words(n){n=Math.floor(Math.abs(Number(n)||0));if(n===0)return"Zero";let s="";const h=x=>{let r="";if(x>=100){r+=ONES[Math.floor(x/100)]+" Hundred ";x%=100;}if(x>=20){r+=TENS[Math.floor(x/10)];if(x%10)r+="-"+ONES[x%10];}else if(x>0){r+=ONES[x];}return r.trim();};
+const B=Math.floor(n/1e9),M=Math.floor(n%1e9/1e6),T=Math.floor(n%1e6/1e3),R=n%1e3;
+if(B)s+=h(B)+" Billion ";if(M)s+=h(M)+" Million ";if(T)s+=h(T)+" Thousand ";if(R)s+=h(R);return s.trim();}
+function amountWords(n){n=Number(n)||0;const w=words(n);const c=Math.round((n-Math.floor(n))*100);return w+" Pesos"+(c?" and "+String(c).padStart(2,"0")+"/100":"")+" Only";}
+
+/* ================= DEFAULT TEMPLATES ================= */
+const HEAD_TPL=`<div style="text-align:center;margin-bottom:14px">
+<div style="font-size:11px;letter-spacing:1px">Republic of the Philippines &bull; {{lgu}}</div>
+<h2 style="margin:2px 0;font-size:20px">{{center_name}}</h2>
+<div style="font-size:12px;color:#444">{{center_address}} &bull; {{center_contact}}</div>
+<div style="border-top:3px double #111;margin-top:10px;padding-top:8px;font-weight:800;letter-spacing:2px;font-size:15px">{{doc_title}}</div>
+<div style="font-size:12px">No. <b>{{txn_no}}</b> &nbsp;|&nbsp; Date: <b>{{date}}</b></div></div>`;
+const SIGN_TPL=`<table style="width:100%;margin-top:34px;font-size:12.5px"><tr>
+<td style="width:50%;text-align:center;vertical-align:bottom">Prepared / Released by:<br><br><b>{{officer}}</b><br><span style="font-size:11px">Officer-in-Charge</span><br><br>Signature: __________________</td>
+<td style="width:50%;text-align:center;vertical-align:bottom">Received by:<br><br><b>{{name}}</b><br><span style="font-size:11px">{{address}}</span><br><br>Signature: __________________</td></tr></table>`;
+const TPL_PAYSLIP=HEAD_TPL+`
+<table style="width:100%;font-size:13px;border-collapse:collapse;margin-top:6px">
+<tr><td style="padding:4px 0;width:32%;color:#555">Payee (Farmer)</td><td style="padding:4px 0"><b>{{name}}</b></td></tr>
+<tr><td style="padding:4px 0;color:#555">Address</td><td style="padding:4px 0">{{address}}</td></tr>
+<tr><td style="padding:4px 0;color:#555">Age / Sex</td><td style="padding:4px 0">{{age}} / {{sex}}</td></tr>
+<tr><td style="padding:4px 0;color:#555">RSBSA No.</td><td style="padding:4px 0"><b>{{rsbsa}}</b></td></tr></table>
+<table style="width:100%;font-size:13px;border-collapse:collapse;margin-top:10px" border="1" cellpadding="6">
+<tr style="background:#f0f0f0"><th>Particulars</th><th style="text-align:right">Amount</th></tr>
+<tr><td>Palay &mdash; {{variety}} ({{classification}})<br><span style="font-size:12px">{{weight_kg}} kg &times; ₱{{price_per_kg}}/kg &nbsp;|&nbsp; MC: {{moisture}}%</span></td><td style="text-align:right">₱{{gross}}</td></tr>
+<tr><td>Less: Deductions <span style="font-size:12px">({{deduction_note}})</span></td><td style="text-align:right">({{deductions}})</td></tr>
+<tr><td style="font-weight:800;font-size:15px">NET PAYABLE</td><td style="text-align:right;font-weight:800;font-size:15px">₱{{net}}</td></tr></table>
+<p style="font-size:12.5px;margin-top:8px">Amount in words: <i><b>{{amount_in_words}}</b></i></p>
+<p style="font-size:12.5px">Mode of payment: <b>{{mode}}</b> &nbsp;&nbsp; Status: <b>{{status}}</b></p>`+SIGN_TPL;
+const TPL_PALAY_AR=HEAD_TPL+`
+<p style="font-size:13.5px;line-height:1.8">I, <b>{{name}}</b>, of legal age, residing at {{address}}, with RSBSA No. <b>{{rsbsa}}</b>, hereby acknowledge receipt of the amount of <b>₱{{net}} ({{amount_in_words}})</b> from the <b>{{center_name}}, {{lgu}}</b>, as payment for <b>{{weight_kg}} kg</b> of palay ({{variety}}, {{classification}}) delivered on {{date}} under Transaction No. <b>{{txn_no}}</b>.</p>
+<p style="font-size:13.5px">Mode of payment: <b>{{mode}}</b></p>`+SIGN_TPL;
+const TPL_RICE_INV=HEAD_TPL+`
+<table style="width:100%;font-size:13px;border-collapse:collapse;margin-top:6px">
+<tr><td style="padding:4px 0;width:32%;color:#555">Buyer / Recipient</td><td style="padding:4px 0"><b>{{name}}</b></td></tr>
+<tr><td style="padding:4px 0;color:#555">Address</td><td style="padding:4px 0">{{address}}</td></tr>
+<tr><td style="padding:4px 0;color:#555">Age / Category</td><td style="padding:4px 0">{{age}} / {{category}}</td></tr>
+<tr><td style="padding:4px 0;color:#555">Program</td><td style="padding:4px 0">{{program}}</td></tr></table>
+<table style="width:100%;font-size:13px;border-collapse:collapse;margin-top:10px" border="1" cellpadding="6">
+<tr style="background:#f0f0f0"><th>Particulars</th><th style="text-align:right">Amount</th></tr>
+<tr><td>Rice &mdash; {{variety}}<br><span style="font-size:12px">{{kilos}} kg ({{sacks}} sack(s) &times; {{kg_per_sack}} kg) &times; ₱{{price_per_kg}}/kg</span></td><td style="text-align:right">₱{{gross}}</td></tr>
+<tr><td>Less: Discount / Subsidy</td><td style="text-align:right">({{discount}})</td></tr>
+<tr><td style="font-weight:800;font-size:15px">AMOUNT DUE</td><td style="text-align:right;font-weight:800;font-size:15px">₱{{net}}</td></tr></table>
+<p style="font-size:12.5px;margin-top:8px">Amount in words: <i><b>{{amount_in_words}}</b></i></p>
+<p style="font-size:12.5px">Mode of payment: <b>{{mode}}</b> &nbsp;&nbsp; Status: <b>{{status}}</b></p>`+SIGN_TPL;
+const TPL_SUBSIDY_AR=HEAD_TPL+`
+<p style="font-size:13.5px;line-height:1.8">I, <b>{{name}}</b> ({{age}} years old, {{category}}), residing at {{address}}, hereby acknowledge receipt of <b>{{kilos}} kilograms of rice</b> ({{variety}}, {{sacks}} sack(s)) from the <b>{{center_name}}, {{lgu}}</b>, under the <b>{{program}}</b>, released on {{date}} per Transaction No. <b>{{txn_no}}</b>.</p>
+<p style="font-size:13.5px">Equivalent value: <b>₱{{gross}}</b> &nbsp;|&nbsp; Amount paid: <b>₱{{net}}</b> ({{amount_in_words}})</p>`+SIGN_TPL;
+
+const PLACEHOLDERS=[
+ ["{{doc_title}}","Document title (auto from template)"],
+ ["{{txn_no}}","Transaction / batch number"],["{{date}}","Transaction date"],
+ ["{{name}}","Farmer / buyer / recipient name"],["{{address}}","Address / barangay"],
+ ["{{age}}","Age"],["{{sex}}","Sex"],["{{contact}}","Contact number"],
+ ["{{rsbsa}}","RSBSA no. (palay)"],["{{id_no}}","ID / RSBSA no. (rice)"],
+ ["{{category}}","Sector category (rice)"],["{{program}}","Program name (rice)"],
+ ["{{variety}}","Palay / rice variety"],["{{classification}}","Fresh or Dry (palay)"],
+ ["{{weight_kg}}","Palay weight in kg"],["{{moisture}}","Moisture content %"],
+ ["{{sacks}}","No. of sacks (rice)"],["{{kg_per_sack}}","Kg per sack"],
+ ["{{kilos}}","Rice kilos"],["{{price_per_kg}}","Price per kg"],
+ ["{{gross}}","Gross amount"],["{{deductions}}","Deductions (palay)"],
+ ["{{deduction_note}}","Deduction details"],["{{discount}}","Discount / subsidy (rice)"],
+ ["{{net}}","Net payable / amount due"],["{{amount_in_words}}","Amount in words"],
+ ["{{status}}","Payment status"],["{{mode}}","Mode of payment"],["{{remarks}}","Remarks"],
+ ["{{center_name}}","Center name (Settings)"],["{{lgu}}","LGU / office"],
+ ["{{center_address}}","Center address"],["{{center_contact}}","Center contact"],
+ ["{{officer}}","Officer-in-charge (signatory)"]
+];
+
+/* ================= STATE ================= */
+const DB_KEY="ARPC_DB_v1";
+let DB=null;
+function defaultSettings(){return{center:"ALCALA RICE PROCESSING CENTER",lgu:"LGU Alcala",address:"Alcala, Cagayan",contact:"(078) 000-0000",officer:"",priceFresh:19.00,priceDry:23.00,mcThresh:14,priceRice:45.00,recovery:65,kgSack:25,fund:500000,lowStock:500};}
+function defaultTemplates(){return[
+ {id:"tpl-payslip",name:"Palay Payment Slip",kind:"palay",title:"PAYMENT SLIP — PALAY PROCUREMENT",body:TPL_PAYSLIP},
+ {id:"tpl-palay-ar",name:"Palay Acknowledgement Receipt",kind:"palay",title:"ACKNOWLEDGEMENT RECEIPT",body:TPL_PALAY_AR},
+ {id:"tpl-rice-inv",name:"Rice Sales Invoice / Receipt",kind:"rice",title:"SALES INVOICE / OFFICIAL RECEIPT — RICE",body:TPL_RICE_INV},
+ {id:"tpl-sub-ar",name:"Subsidy Acknowledgement Receipt",kind:"rice",title:"ACKNOWLEDGEMENT RECEIPT — RICE SUBSIDY",body:TPL_SUBSIDY_AR}
+];}
+function blankDB(){return{settings:defaultSettings(),farmers:[],palayTx:[],buyers:[],riceTx:[],milling:[],templates:defaultTemplates(),seq:{palay:0,riceSale:0,riceSub:0,mill:0}};}
+function save(){localStorage.setItem(DB_KEY,JSON.stringify(DB));}
+function load(){try{const raw=localStorage.getItem(DB_KEY);if(raw){DB=JSON.parse(raw);try{migrateData();}catch(e){}return;}}catch(e){}DB=blankDB();}
+function migrateData(){const s=DB.settings||{};let changed=false;
+ if(s.address==="Alcala, Pangasinan"){s.address="Alcala, Cagayan";changed=true;}
+ if(s.contact==="(075) 000-0000"){s.contact="(078) 000-0000";changed=true;}
+ const B={"San Pedro":"San Esteban","San Vicente":"Centro Norte","Macayo":"Masin","Poblacion East":"Centro Sur","Poblacion West":"Centro Norte","Vacante":"Baybayog","Curareng":"Dalaoig","San Jose":"Tupang","Pindangan Sur":"Piggatan","Laoac":"Agani","Gualsic":"Cabuluan","Atainan":"Afusing Daga","Kisikis":"Pinopoc","Bersamin":"Pagbangkeruan","Canarvacanan":"Uray"};
+ const fix=a=>{if(typeof a!=="string")return a;for(const k in B)a=a.split("Brgy. "+k+", Alcala").join("Brgy. "+B[k]+", Alcala");return a;};
+ const touch=o=>{const n=fix(o.address);if(n!==o.address){o.address=n;changed=true;}if(typeof o.rsbsa==="string"&&o.rsbsa.indexOf("01-02-")===0){o.rsbsa=o.rsbsa.replace("01-02-","02-15-");changed=true;}};
+ (DB.farmers||[]).forEach(touch);(DB.buyers||[]).forEach(touch);(DB.palayTx||[]).forEach(touch);(DB.riceTx||[]).forEach(touch);
+ (DB.riceTx||[]).concat(DB.buyers||[]).forEach(o=>{["buyerName","name"].forEach(f=>{if(typeof o[f]==="string"){let v=o[f];v=v.replace("San Pedro Elementary","San Esteban Elementary");if(v==="Brgy. Vacante Council")v="Brgy. Baybayog Council";if(v!==o[f]){o[f]=v;changed=true;}}});});
+ if(changed){try{localStorage.setItem(DB_KEY,JSON.stringify(DB));}catch(e){}}}
+function nextTxn(kind){const y=new Date().getFullYear();
+ if(kind==="palay"){DB.seq.palay++;return "PB-"+y+"-"+String(DB.seq.palay).padStart(4,"0");}
+ if(kind==="sale"){DB.seq.riceSale++;return "RS-"+y+"-"+String(DB.seq.riceSale).padStart(4,"0");}
+ if(kind==="subsidy"){DB.seq.riceSub++;return "SUB-"+y+"-"+String(DB.seq.riceSub).padStart(4,"0");}
+ DB.seq.mill++;return "MILL-"+y+"-"+String(DB.seq.mill).padStart(3,"0");}
+
+/* ================= DEMO SEED DATA ================= */
+function seedDemo(){
+ const F=[["Juan D. Dela Cruz","Brgy. San Esteban, Alcala",52,"Male","0917-111-2233","02-15-002-000101"],
+ ["Maria S. Ramos","Brgy. Centro Norte, Alcala",47,"Female","0918-222-3344","02-15-002-000102"],
+ ["Pedro L. Aquino","Brgy. Masin, Alcala",60,"Male","0919-333-4455","02-15-002-000103"],
+ ["Rosa M. Villanueva","Brgy. Centro Sur, Alcala",44,"Female","0920-444-5566","02-15-002-000104"],
+ ["Jose R. Fernandez","Brgy. Baybayog, Alcala",55,"Male","0921-555-6677","02-15-002-000105"],
+ ["Ana P. Castillo","Brgy. Dalaoig, Alcala",38,"Female","0922-666-7788","02-15-002-000106"],
+ ["Miguel T. Bautista","Brgy. Tupang, Alcala",63,"Male","0923-777-8899","02-15-002-000107"],
+ ["Luz C. Mendoza","Brgy. Piggatan, Alcala",50,"Female","0924-888-9900","02-15-002-000108"]];
+ DB.farmers=F.map(f=>({id:uid("f"),name:f[0],address:f[1],age:f[2],sex:f[3],contact:f[4],rsbsa:f[5]}));
+ const P=[["2026-06-08",0,"NSIC Rc 222","Fresh / Wet",1840,21.5],["2026-06-20",1,"NSIC Rc 160","Fresh / Wet",2410,22.0],
+ ["2026-07-05",2,"NSIC Rc 222","Dry",1290,13.2],["2026-07-18",3,"NSIC Rc 216","Fresh / Wet",3120,20.8],
+ ["2026-08-02",0,"NSIC Rc 222","Dry",1560,13.8],["2026-08-11",4,"Dinorado","Dry",980,13.0],
+ ["2026-08-22",5,"NSIC Rc 160","Fresh / Wet",2040,21.0],["2026-09-03",1,"NSIC Rc 222","Dry",2210,13.5],
+ ["2026-09-10",6,"NSIC Rc 402","Fresh / Wet",1780,22.4],["2026-09-15",7,"Jasmine","Dry",1140,12.8],["2026-09-17",2,"NSIC Rc 222","Fresh / Wet",2650,20.2]];
+ DB.palayTx=P.map((p,i)=>{const f=DB.farmers[p[1]];const dry=p[3]==="Dry";const price=dry?23:19;const gross=p[4]*price;const ded=i%3===0?250:0;
+  return{id:uid("p"),txnNo:"PB-2026-"+String(i+1).padStart(4,"0"),date:p[0],farmerId:f.id,farmerName:f.name,address:f.address,age:f.age,sex:f.sex,contact:f.contact,rsbsa:f.rsbsa,variety:p[2],classification:p[3],weightKg:p[4],moisture:p[5],pricePerKg:price,gross:+gross.toFixed(2),deductions:ded,deductionNote:ded?"Sacks":"",net:+(gross-ded).toFixed(2),status:i===10?"Pending":"Paid",mode:"Cash",remarks:""};});
+ DB.seq.palay=P.length;
+ const R=[["2026-06-25","sale","Walk-in Buyer","Regular Sale","Well-milled Rc 222",40,25,46,0,"Completed"],
+ ["2026-07-12","sale","Institutional Buyer","Regular Sale","Well-milled Rc 160",120,25,44,0,"Completed"],
+ ["2026-07-28","subsidy","Senior Citizen","Senior Citizens Assistance","Well-milled Rc 222",2,25,45,2250,"Released"],
+ ["2026-08-06","sale","Walk-in Buyer","Regular Sale","Regular-milled",60,25,42,0,"Completed"],
+ ["2026-08-15","subsidy","Poor / Marginalized Family","Rice Subsidy Program","Well-milled Rc 222",4,25,45,4500,"Released"],
+ ["2026-08-20","subsidy","PWD","PWD Assistance","Well-milled Rc 160",2,25,44,2200,"Released"],
+ ["2026-08-29","subsidy","Farmer","Rice Subsidy Program","Well-milled Rc 222",3,25,45,3375,"Released"],
+ ["2026-09-05","sale","LGU / Barangay","Regular Sale","Well-milled Rc 222",80,25,45,0,"Completed"],
+ ["2026-09-08","subsidy","4Ps Member","4Ps Support","Regular-milled",2,25,42,2100,"Released"],
+ ["2026-09-12","sale","Walk-in Buyer","Regular Sale","Dinorado Special",20,25,58,0,"Pending"],
+ ["2026-09-14","subsidy","Solo Parent","Rice Subsidy Program","Well-milled Rc 222",2,25,45,2250,"Released"],
+ ["2026-09-18","subsidy","Senior Citizen","Senior Citizens Assistance","Well-milled Rc 160",2,25,44,2200,"Released"]];
+ const RN=[["Carlos D. Reyes","Brgy. Centro Norte, Alcala",45],["San Esteban Elementary School Canteen","Brgy. San Esteban, Alcala",0],["Teresita G. Aquino","Brgy. Masin, Alcala",71],
+ ["Ramon V. Torres","Brgy. Agani, Alcala",39],["Imelda F. Navarro","Brgy. Cabuluan, Alcala",52],["Danilo H. Cruz","Brgy. Afusing Daga, Alcala",48],
+ ["Pedro L. Aquino","Brgy. Masin, Alcala",60],["Brgy. Baybayog Council","Brgy. Baybayog, Alcala",0],["Corazon B. Flores","Brgy. Pinopoc, Alcala",41],
+ ["Grace K. Lim","Alcala Public Market",36],["Marilou J. Santos","Brgy. Pagbangkeruan, Alcala",34],["Apolinario Q. Ventura","Brgy. Uray, Alcala",76]];
+ DB.riceTx=R.map((r,i)=>{const kilos=r[5]*r[6];const gross=kilos*r[7];const net=gross-r[8];
+  const key=r[1]==="sale"?"riceSale":"riceSub";DB.seq[key]++;
+  return{id:uid("r"),txnNo:(r[1]==="sale"?"RS":"SUB")+"-2026-"+String(DB.seq[key]).padStart(4,"0"),date:r[0],type:r[1],buyerName:RN[i][0],address:RN[i][1],age:RN[i][2]||"",sex:i%2?"Female":"Male",contact:"09"+(20+i)+"-000-000"+i,category:r[2],idNo:i<9?"RS-"+(1000+i):"",program:r[3],variety:r[4],sacks:r[5],kgPerSack:r[6],kilos,pricePerKg:r[7],gross:+gross.toFixed(2),discount:r[8],net:+net.toFixed(2),status:r[9],mode:r[1]==="subsidy"?"Free (Subsidy)":"Cash",remarks:""};});
+ DB.milling=[["2026-07-02",4250,2760,""],["2026-08-09",4930,3200,"For subsidy program"],["2026-09-06",5550,3620,""]].map((m,i)=>({id:uid("m"),txnNo:"MILL-2026-"+String(i+1).padStart(3,"0"),date:m[0],palayKg:m[1],riceKg:m[2],recovery:+(m[2]/m[1]*100).toFixed(1),remarks:m[3]}));
+ DB.seq.mill=3;
+ const seen={};DB.buyers=[];DB.riceTx.forEach(r=>{if(!seen[r.buyerName]){seen[r.buyerName]=1;DB.buyers.push({id:uid("b"),name:r.buyerName,address:r.address,age:r.age,sex:r.sex,contact:r.contact,category:r.category,idNo:r.idNo});}});
+}
+
+/* ================= AGGREGATIONS ================= */
+function inPeriod(dateStr,year,month){if(!dateStr)return false;const d=new Date(dateStr+"T00:00:00");if(isNaN(d))return false;if(d.getFullYear()!==year)return false;if(month!==""&&month!=null&&d.getMonth()!==Number(month))return false;return true;}
+function palayTotals(year,month){let kg=0,gross=0,net=0,paid=0,pending=0,count=0;DB.palayTx.forEach(t=>{if(t.status==="Cancelled")return;if(!inPeriod(t.date,year,month))return;count++;kg+=+t.weightKg||0;gross+=+t.gross||0;net+=+t.net||0;if(t.status==="Paid")paid+=+t.net||0;else pending+=+t.net||0;});return{kg,gross,net,paid,pending,count,avg:kg?net/kg:0};}
+function riceTotals(year,month){let saleKg=0,saleRev=0,saleDue=0,subKg=0,subVal=0,saleN=0,subN=0;const ben=new Set();
+ DB.riceTx.forEach(t=>{if(t.status==="Cancelled")return;if(!inPeriod(t.date,year,month))return;
+  if(t.type==="sale"){saleN++;saleKg+=+t.kilos||0;saleRev+=+t.net||0;if(t.status!=="Completed")saleDue+=+t.net||0;}
+  else{subN++;subKg+=+t.kilos||0;subVal+=+t.gross||0;ben.add(t.buyerName+"|"+t.address);}});
+ return{saleKg,saleRev,saleDue,subKg,subVal,saleN,subN,benCount:ben.size};}
+function stockLevels(){let palayIn=0,milled=0,riceMade=0,riceOut=0;
+ DB.palayTx.forEach(t=>{if(t.status!=="Cancelled")palayIn+=+t.weightKg||0;});
+ DB.milling.forEach(m=>{milled+=+m.palayKg||0;riceMade+=+m.riceKg||0;});
+ DB.riceTx.forEach(t=>{if(t.status!=="Cancelled")riceOut+=+t.kilos||0;});
+ return{palay:palayIn-milled,rice:riceMade-riceOut,palayIn,milled,riceMade,riceOut};}
+
+/* ================= NAVIGATION ================= */
+const VIEW_TITLES={dashboard:"Dashboard",palay:"Palay Buying Transactions",rice:"Rice Marketing & Subsidy Distribution",beneficiaries:"Beneficiaries",inventory:"Inventory & Milling",documents:"Documents & Templates",reports:"Reports",settings:"Settings & Data"};
+document.querySelectorAll(".nav-btn").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$("view-"+b.dataset.view).classList.add("active");
+ $("topbarTitle").textContent=VIEW_TITLES[b.dataset.view];$("sidebar").classList.remove("open");window.scrollTo(0,0);}));
+$("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+
+/* ================= DASHBOARD ================= */
+function dashFilter(){return{year:+$("dashYear").value||new Date().getFullYear(),month:$("dashMonth").value};}
+function kpiCard(label,value,sub,cls,icon){return `<div class="kpi ${cls||""}"><div class="k-label">${label}</div><div class="k-value">${value}</div><div class="k-sub">${sub}</div><div class="k-icon">${icon}</div></div>`;}
+const IC={palay:'<svg viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2"><path d="M12 22V8"/><path d="M12 8C12 5 10 2.5 7 2c0 3 1 5.5 5 6z"/><path d="M12 8c0-3 2-5.5 5-6 0 3-1 5.5-5 6z"/></svg>',
+ cash:'<svg viewBox="0 0 24 24" fill="none" stroke="#9a7b1a" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>',
+ rice:'<svg viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2"><path d="M6 8h15l-1.5 9h-12z"/><path d="M6 8l-1-4H2"/><circle cx="9" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/></svg>',
+ gift:'<svg viewBox="0 0 24 24" fill="none" stroke="#6a1b9a" stroke-width="2"><rect x="3" y="8" width="18" height="4"/><path d="M5 12v9h14v-9M12 8v13M12 8s-4 0-5.5-1.5C5.5 5.5 6 4 7.5 4S12 8 12 8zM12 8s4 0 5.5-1.5C18.5 5.5 18 4 16.5 4S12 8 12 8z"/></svg>',
+ users:'<svg viewBox="0 0 24 24" fill="none" stroke="#00695c" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.2 3.4-5 6.5-5s5.7 1.8 6.5 5"/></svg>',
+ box:'<svg viewBox="0 0 24 24" fill="none" stroke="#e65100" stroke-width="2"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>'};
+function renderDashboard(){
+ const{year,month}=dashFilter();
+ $("dashPeriodLabel").textContent=(month===""?("Year "+year):(MONTHS[+month]+" "+year));
+ const p=palayTotals(year,month),r=riceTotals(year,month),s=stockLevels();
+ const cash=DB.settings.fund+r.saleRev-p.paid;
+ $("kpiRow").innerHTML=
+  kpiCard("Palay Procured",num(p.kg)+" kg",peso(p.net)+" net payable • "+p.count+" txns","",IC.palay)+
+  kpiCard("Rice Sales Revenue",peso(r.saleRev),num(r.saleKg)+" kg sold • "+r.saleN+" sales","blue",IC.rice)+
+  kpiCard("Subsidy Distributed",num(r.subKg)+" kg",peso(r.subVal)+" value • "+r.subN+" releases","",IC.gift)+
+  kpiCard("Beneficiaries",r.benCount,"unique subsidy recipients","teal",IC.users)+
+  kpiCard("Cash Position",peso(cash),"fund "+peso(DB.settings.fund)+" + sales − payouts","gold",IC.cash)+
+  kpiCard("Stocks on Hand",num(s.palay)+" / "+num(s.rice)+" kg","palay / milled rice","amber",IC.box);
+ // Monthly bar chart (last 6 months ending at filter month or current)
+ let endY=year,endM=month===""?new Date().getMonth():+month;if(month===""&&year!==new Date().getFullYear())endM=11;
+ const bars=[];for(let i=5;i>=0;i--){let m=endM-i,y=endY;while(m<0){m+=12;y--;}const pp=palayTotals(y,m),rr=riceTotals(y,m);bars.push({label:MONTHS[m].slice(0,3),palay:pp.kg,rice:rr.saleKg+rr.subKg});}
+ const max=Math.max(1,...bars.map(b=>Math.max(b.palay,b.rice)));
+ const W=620,H=230,padL=52,padB=34,bw=(W-padL-16)/bars.length;
+ let svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img">`;
+ for(let g=0;g<=4;g++){const v=max*g/4,y=H-padB-(H-padB-14)*g/4;svg+=`<line x1="${padL}" y1="${y}" x2="${W-8}" y2="${y}" stroke="#e3e8e0"/><text x="${padL-6}" y="${y+4}" text-anchor="end" font-size="10" fill="#6b7280">${v>=1000?(v/1000).toFixed(1)+"k":Math.round(v)}</text>`;}
+ bars.forEach((b,i)=>{const x=padL+i*bw+bw*0.14,w1=bw*0.32,base=H-padB,h1=(H-padB-14)*b.palay/max,h2=(H-padB-14)*b.rice/max;
+  svg+=`<rect x="${x}" y="${base-h1}" width="${w1}" height="${h1}" rx="3" fill="#2e7d32"><title>Palay: ${num(b.palay)} kg</title></rect>`;
+  svg+=`<rect x="${x+w1+4}" y="${base-h2}" width="${w1}" height="${h2}" rx="3" fill="#c9a227"><title>Rice: ${num(b.rice)} kg</title></rect>`;
+  svg+=`<text x="${x+w1}" y="${H-12}" text-anchor="middle" font-size="11" fill="#374151">${b.label}</text>`;});
+ svg+=`<g font-size="11"><rect x="${padL}" y="2" width="11" height="11" rx="2" fill="#2e7d32"/><text x="${padL+15}" y="11" fill="#374151">Palay procured</text><rect x="${padL+130}" y="2" width="11" height="11" rx="2" fill="#c9a227"/><text x="${padL+145}" y="11" fill="#374151">Rice released</text></g></svg>`;
+ $("chartMonthly").innerHTML=svg;
+ // Donut: beneficiaries by category
+ const cats={},cnt={};DB.riceTx.forEach(t=>{if(t.type!=="subsidy"||t.status==="Cancelled")return;if(!inPeriod(t.date,year,month))return;const k=t.buyerName+"|"+t.address;if(!cnt[k]){cnt[k]=1;cats[t.category]=(cats[t.category]||0)+1;}});
+ const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);const total=entries.reduce((a,e)=>a+e[1],0)||1;
+ const colors=["#1b5e20","#c9a227","#1565c0","#6a1b9a","#e65100","#00695c","#7b1fa2","#33691e","#4e342e","#37474f"];
+ let acc=0,donut=`<svg viewBox="0 0 180 180" style="width:190px;height:190px;display:block;margin:0 auto">`;
+ if(!entries.length)donut+=`<circle cx="90" cy="90" r="62" fill="none" stroke="#e3e8e0" stroke-width="30"/>`;
+ entries.forEach((e,i)=>{const frac=e[1]/total;const col=colors[i%colors.length];
+  donut+=`<circle cx="90" cy="90" r="62" fill="none" stroke="${col}" stroke-width="30" stroke-dasharray="${(frac*389.5).toFixed(1)} 389.5" stroke-dashoffset="${(-acc*389.5).toFixed(1)}" transform="rotate(-90 90 90)"><title>${esc(e[0])}: ${e[1]}</title></circle>`;acc+=frac;});
+ donut+=`<text x="90" y="86" text-anchor="middle" font-size="26" font-weight="800" fill="#123d1f">${Object.keys(cnt).length}</text><text x="90" y="104" text-anchor="middle" font-size="11" fill="#6b7280">beneficiaries</text></svg>`;
+ $("chartDonut").innerHTML=donut;
+ $("donutLegend").innerHTML=entries.length?entries.map((e,i)=>`<div class="list-item"><span><span class="legend-dot" style="background:${colors[i%colors.length]}"></span>${esc(e[0])}</span><b>${e[1]}</b></div>`).join(""):'<div class="empty">No subsidy releases in this period.</div>';
+ // Cash flow
+ const outMax=Math.max(p.paid,r.saleRev,1);
+ $("cashFlowBox").innerHTML=`
+  <div class="list-item"><span>Palay payouts (paid)</span><b>${peso(p.paid)}</b></div><div class="progress"><div style="width:${(p.paid/outMax*100).toFixed(1)}%"></div></div>
+  <div class="list-item" style="margin-top:10px"><span>Rice sales collected</span><b>${peso(r.saleRev-r.saleDue)}</b></div><div class="progress"><div style="width:${((r.saleRev-r.saleDue)/outMax*100).toFixed(1)}%"></div></div>
+  <div class="list-item" style="margin-top:10px"><span>Uncollected sales (receivable)</span><b>${peso(r.saleDue)}</b></div>
+  <div class="list-item"><span>Unpaid palay (payable)</span><b>${peso(p.pending)}</b></div>
+  <div class="list-item"><span>Net cash flow (sales − payouts)</span><b style="color:${r.saleRev-p.paid>=0?"#1b5e20":"#c62828"}">${peso(r.saleRev-p.paid)}</b></div>`;
+ // Alerts
+ const alerts=[];
+ if(p.pending>0)alerts.push(`<div class="alert warn"><b>${peso(p.pending)}</b> in unpaid/partial palay purchases needs settlement.</div>`);
+ if(r.saleDue>0)alerts.push(`<div class="alert warn"><b>${peso(r.saleDue)}</b> in rice sales is still uncollected.</div>`);
+ if(s.rice<DB.settings.lowStock)alerts.push(`<div class="alert warn">Milled-rice stock is low: <b>${num(s.rice)} kg</b> remaining (alert below ${num(DB.settings.lowStock)} kg). Schedule milling.</div>`);
+ if(s.palay<0)alerts.push(`<div class="alert warn">Palay stock is negative (${num(s.palay)} kg) — check milling entries.</div>`);
+ if(!alerts.length)alerts.push(`<div class="alert ok"><b>All clear!</b> No pending payables, receivables, or low-stock issues in this period.</div>`);
+ alerts.push(`<div class="alert info">Palay on hand: <b>${num(s.palay)} kg</b> &nbsp;•&nbsp; Milled rice on hand: <b>${num(s.rice)} kg</b> &nbsp;•&nbsp; Recovery avg: <b>${avgRecovery()}%</b></div>`);
+ $("alertsList").innerHTML=alerts.join("");
+ // Recents
+ $("recentPalayBody").innerHTML=[...DB.palayTx].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).map(t=>`<tr><td>${fdate(t.date)}</td><td>${esc(t.farmerName)}</td><td class="num">${num(t.weightKg)}</td><td class="num">${peso(t.net)}</td><td>${statusBadge(t.status)}</td></tr>`).join("")||'<tr><td colspan="5" class="empty">No records.</td></tr>';
+ $("recentRiceBody").innerHTML=[...DB.riceTx].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).map(t=>`<tr><td>${fdate(t.date)}</td><td>${esc(t.buyerName)}</td><td class="num">${num(t.kilos)}</td><td class="num">${peso(t.net)}</td><td>${t.type==="sale"?'<span class="badge b-sale">Sale</span>':'<span class="badge b-subsidy">Subsidy</span>'}</td></tr>`).join("")||'<tr><td colspan="5" class="empty">No records.</td></tr>';
+ // Top farmers
+ const agg={};DB.palayTx.forEach(t=>{if(t.status==="Cancelled")return;if(!inPeriod(t.date,year,month))return;agg[t.farmerName]=agg[t.farmerName]||{kg:0,amt:0};agg[t.farmerName].kg+=+t.weightKg||0;agg[t.farmerName].amt+=+t.net||0;});
+ const top=Object.entries(agg).sort((a,b)=>b[1].kg-a[1].kg).slice(0,5);const topMax=top.length?top[0][1].kg:1;
+ $("topFarmersList").innerHTML=top.length?top.map((e,i)=>`<div style="margin-bottom:10px"><div class="list-item"><span><b>#${i+1}</b> ${esc(e[0])}</span><b>${num(e[1].kg)} kg • ${peso(e[1].amt)}</b></div><div class="progress"><div style="width:${(e[1].kg/topMax*100).toFixed(1)}%"></div></div></div>`).join(""):'<div class="empty">No purchases in this period.</div>';
+}
+function statusBadge(s){const m={Paid:"b-paid",Completed:"b-completed",Released:"b-released",Pending:"b-pending",Partial:"b-partial",Cancelled:"b-cancelled"};return `<span class="badge ${m[s]||"b-pending"}">${esc(s)}</span>`;}
+function avgRecovery(){if(!DB.milling.length)return DB.settings.recovery;let pi=0,ro=0;DB.milling.forEach(m=>{pi+=+m.palayKg||0;ro+=+m.riceKg||0;});return pi?(ro/pi*100).toFixed(1):DB.settings.recovery;}
+
+/* ================= PALAY MODULE ================= */
+function refreshFarmerList(){$("farmerList").innerHTML=DB.farmers.map(f=>`<option value="${esc(f.name)}">${esc(f.address)} • ${esc(f.rsbsa||"no RSBSA")}</option>`).join("");}
+function filteredPalay(){const q=($("palaySearch").value||"").toLowerCase(),st=$("palayStatusFilter").value,mo=$("palayMonthFilter").value;
+ return DB.palayTx.filter(t=>(!st||t.status===st)&&(!mo||t.date.slice(0,7)===mo)&&(!q||(t.farmerName+" "+t.txnNo+" "+t.rsbsa+" "+t.address+" "+t.variety).toLowerCase().includes(q))).sort((a,b)=>b.date.localeCompare(a.date)||b.txnNo.localeCompare(a.txnNo));}
+function renderPalay(){
+ const rows=filteredPalay();let kg=0,net=0,paid=0,pend=0;
+ rows.forEach(t=>{if(t.status!=="Cancelled"){kg+=+t.weightKg||0;net+=+t.net||0;if(t.status==="Paid")paid++;else pend++;}});
+ $("palayStats").innerHTML=kpiCard("Volume (filtered)",num(kg)+" kg",rows.length+" transactions","",IC.palay)+kpiCard("Net Payable",peso(net),"avg "+peso(kg?net/kg:0)+"/kg","gold",IC.cash)+kpiCard("Paid",paid,"transactions","teal",IC.gift)+kpiCard("Pending / Partial",pend,"need action","amber",IC.box);
+ $("palayCount").textContent=rows.length+" record(s)";
+ $("palayTableBody").innerHTML=rows.map(t=>`<tr><td><b>${esc(t.txnNo)}</b></td><td style="white-space:nowrap">${fdate(t.date)}</td>
+  <td><b>${esc(t.farmerName)}</b><br><span style="color:var(--muted);font-size:12px">${esc(t.rsbsa||"—")}</span></td>
+  <td>${esc(t.variety||"—")}<br><span class="badge ${t.classification==="Dry"?"b-dry":"b-fresh"}">${esc(t.classification||"")}</span></td>
+  <td class="num">${num(t.weightKg)}</td><td class="num">${t.moisture??"—"}</td><td class="num">${num(t.pricePerKg)}</td><td class="num"><b>${peso(t.net)}</b></td>
+  <td>${statusBadge(t.status)}</td>
+  <td><div class="row-actions"><button class="btn sm" title="Payment Slip" onclick="quickDoc('palay','${t.id}',0)">Slip</button><button class="btn sm" title="Acknowledgement Receipt" onclick="quickDoc('palay','${t.id}',1)">Receipt</button><button class="btn sm" onclick="openPalayModal('${t.id}')">Edit</button><button class="btn sm danger" onclick="deletePalay('${t.id}')">Del</button></div></td></tr>`).join("")||'<tr><td colspan="10"><div class="empty">No palay transactions found. Click "+ New Purchase" to record one.</div></td></tr>';
+ $("palayTableFoot").innerHTML=rows.length?`<tr><td colspan="4">TOTAL (${rows.length})</td><td class="num">${num(kg)}</td><td></td><td></td><td class="num">${peso(net)}</td><td colspan="2"></td></tr>`:"";
+}
+function openPalayModal(id){
+ refreshFarmerList();$("p_id").value=id||"";
+ const t=id?DB.palayTx.find(x=>x.id===id):null;
+ $("palayModalTitle").textContent=t?("Edit Purchase "+t.txnNo):"New Palay Purchase";
+ $("p_date").value=t?t.date:todayStr();$("p_txn").value=t?t.txnNo:nextTxn("palay");if(!t)DB.seq.palay--;
+ $("p_status").value=t?t.status:"Paid";$("p_name").value=t?t.farmerName:"";$("p_address").value=t?t.address:"";
+ $("p_age").value=t?t.age??"":"";$("p_sex").value=t?t.sex:"Male";$("p_contact").value=t?t.contact||"":"";$("p_rsbsa").value=t?t.rsbsa||"":"";
+ $("p_variety").value=t?t.variety||"":"";$("p_class").value=t?t.classification:"Fresh / Wet";
+ $("p_weight").value=t?t.weightKg:"";$("p_moisture").value=t?t.moisture??"":"";$("p_price").value=t?t.pricePerKg:"";
+ $("p_deduct").value=t?t.deductions||0:0;$("p_deductNote").value=t?t.deductionNote||"":"";$("p_mode").value=t?t.mode:"Cash";$("p_remarks").value=t?t.remarks||"":"";
+ $("p_autofill").classList.remove("show");suggestPrice();calcPalay();openModal("palayModal");
+}
+function autofillFarmer(){const v=$("p_name").value.trim().toLowerCase();const f=DB.farmers.find(x=>x.name.toLowerCase()===v);
+ if(f){$("p_address").value=f.address||"";$("p_age").value=f.age??"";$("p_sex").value=f.sex||"Male";$("p_contact").value=f.contact||"";$("p_rsbsa").value=f.rsbsa||"";$("p_autofill").classList.add("show");}
+ else $("p_autofill").classList.remove("show");}
+function suggestPrice(){const mc=+$("p_moisture").value;const s=DB.settings;
+ if($("p_moisture").value===""||isNaN(mc)){$("p_suggest").textContent=`Std: fresh ₱${s.priceFresh}/kg • dry ₱${s.priceDry}/kg`;return;}
+ const dry=mc<=s.mcThresh;$("p_class").value=dry?"Dry":"Fresh / Wet";
+ const sug=dry?s.priceDry:s.priceFresh;
+ if(!$("p_price").value||$("p_price").dataset.auto==="1"){$("p_price").value=sug;$("p_price").dataset.auto="1";}
+ $("p_suggest").textContent=`Suggested: ₱${sug}/kg (${dry?"dry ≤"+s.mcThresh+"% MC":"fresh >"+s.mcThresh+"% MC"}) — click price to override`;}
+function calcPalay(){const w=+$("p_weight").value||0,p=+$("p_price").value||0,d=+$("p_deduct").value||0;const g=w*p,n=g-d;
+ $("p_cW").textContent=num(w);$("p_cP").textContent=num(p);$("p_cG").textContent=num(g);$("p_cD").textContent=num(d);$("p_cN").textContent=num(n);$("p_cWords").textContent=n?amountWords(n):"—";}
+function savePalay(print){
+ const name=$("p_name").value.trim(),addr=$("p_address").value.trim(),w=+$("p_weight").value||0,p=+$("p_price").value||0;
+ if(!name||!addr||!w||!p){toast("Please fill Name, Address, Weight and Price.",true);return;}
+ if(!$("p_date").value){toast("Transaction date is required.",true);return;}
+ const id=$("p_id").value;let t=id?DB.palayTx.find(x=>x.id===id):null;const isNew=!t;
+ if(isNew){t={id:uid("p"),txnNo:$("p_txn").value||nextTxn("palay")};DB.palayTx.push(t);DB.seq.palay=Math.max(DB.seq.palay,parseInt(t.txnNo.slice(-4))||DB.seq.palay);}
+ Object.assign(t,{date:$("p_date").value,status:$("p_status").value,farmerName:name,address:addr,age:$("p_age").value?+$("p_age").value:"",sex:$("p_sex").value,contact:$("p_contact").value.trim(),rsbsa:$("p_rsbsa").value.trim(),variety:$("p_variety").value.trim(),classification:$("p_class").value,weightKg:w,moisture:$("p_moisture").value===""?"":+$("p_moisture").value,pricePerKg:p,gross:+(w*p).toFixed(2),deductions:+$("p_deduct").value||0,deductionNote:$("p_deductNote").value.trim(),mode:$("p_mode").value,remarks:$("p_remarks").value.trim()});
+ t.net=+(t.gross-t.deductions).toFixed(2);
+ let f=DB.farmers.find(x=>x.name.toLowerCase()===name.toLowerCase());
+ if(!f){f={id:uid("f"),name};DB.farmers.push(f);}Object.assign(f,{name,address:addr,age:t.age,sex:t.sex,contact:t.contact,rsbsa:t.rsbsa});t.farmerId=f.id;
+ save();refreshAll();closeModal("palayModal");toast((isNew?"Recorded ":"Updated ")+t.txnNo+" — "+peso(t.net));
+ if(print)quickDoc("palay",t.id,0);
+}
+function deletePalay(id){const t=DB.palayTx.find(x=>x.id===id);if(!t)return;if(!confirm("Delete "+t.txnNo+" ("+t.farmerName+")? This cannot be undone."))return;DB.palayTx=DB.palayTx.filter(x=>x.id!==id);save();refreshAll();toast("Deleted "+t.txnNo);}
+
+/* ================= RICE MODULE ================= */
+let riceTab="";
+function setRiceTab(v,btn){riceTab=v;document.querySelectorAll("[data-rtab]").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderRice();}
+function refreshBuyerList(){$("buyerList").innerHTML=DB.buyers.map(b=>`<option value="${esc(b.name)}">${esc(b.address)} • ${esc(b.category)}</option>`).join("");}
+function filteredRice(){const q=($("riceSearch").value||"").toLowerCase(),mo=$("riceMonthFilter").value;
+ return DB.riceTx.filter(t=>(!riceTab||t.type===riceTab)&&(!mo||t.date.slice(0,7)===mo)&&(!q||(t.buyerName+" "+t.txnNo+" "+t.program+" "+t.category+" "+t.address).toLowerCase().includes(q))).sort((a,b)=>b.date.localeCompare(a.date)||b.txnNo.localeCompare(a.txnNo));}
+function renderRice(){
+ const rows=filteredRice();let saleKg=0,saleRev=0,subKg=0;const ben=new Set();
+ rows.forEach(t=>{if(t.status==="Cancelled")return;if(t.type==="sale"){saleKg+=+t.kilos||0;saleRev+=+t.net||0;}else{subKg+=+t.kilos||0;ben.add(t.buyerName+"|"+t.address);}});
+ $("riceStats").innerHTML=kpiCard("Rice Sold",num(saleKg)+" kg",peso(saleRev)+" revenue","blue",IC.rice)+kpiCard("Subsidy Released",num(subKg)+" kg",ben.size+" beneficiaries","",IC.gift)+kpiCard("Total Volume",num(saleKg+subKg)+" kg",rows.length+" transactions","gold",IC.box)+kpiCard("Avg. Sale Price",peso(saleKg?saleRev/saleKg:0),"per kg (sales only)","teal",IC.cash);
+ $("riceCount").textContent=rows.length+" record(s)";
+ $("riceTableBody").innerHTML=rows.map(t=>`<tr><td><b>${esc(t.txnNo)}</b></td><td style="white-space:nowrap">${fdate(t.date)}</td>
+  <td><b>${esc(t.buyerName)}</b><br><span style="color:var(--muted);font-size:12px">${esc(t.address)}</span></td>
+  <td>${esc(t.program||"—")}<br><span style="color:var(--muted);font-size:12px">${esc(t.category||"")}</span></td>
+  <td class="num">${num(t.kilos)}</td><td class="num">${num(t.pricePerKg)}</td><td class="num"><b>${peso(t.net)}</b></td>
+  <td>${t.type==="sale"?'<span class="badge b-sale">Sale</span>':'<span class="badge b-subsidy">Subsidy</span>'}</td><td>${statusBadge(t.status)}</td>
+  <td><div class="row-actions"><button class="btn sm" title="${t.type==="sale"?"Sales Invoice":"Subsidy Receipt"}" onclick="quickDoc('rice','${t.id}',${t.type==="sale"?2:3})">Receipt</button><button class="btn sm" onclick="openRiceModal('${t.id}')">Edit</button><button class="btn sm danger" onclick="deleteRice('${t.id}')">Del</button></div></td></tr>`).join("")||'<tr><td colspan="10"><div class="empty">No rice transactions found. Click "+ New Sale / Release" to record one.</div></td></tr>';
+ $("riceTableFoot").innerHTML=rows.length?`<tr><td colspan="4">TOTAL (${rows.length})</td><td class="num">${num(saleKg+subKg)}</td><td></td><td class="num">${peso(saleRev)}</td><td colspan="3"></td></tr>`:"";
+}
+function openRiceModal(id){
+ refreshBuyerList();$("r_id").value=id||"";
+ const t=id?DB.riceTx.find(x=>x.id===id):null;
+ $("riceModalTitle").textContent=t?("Edit "+(t.type==="sale"?"Sale ":"Release ")+t.txnNo):"New Rice Sale / Release";
+ $("r_type").value=t?t.type:"sale";$("r_date").value=t?t.date:todayStr();
+ $("r_txn").value=t?t.txnNo:($("r_type").value==="sale"?nextTxn("sale"):nextTxn("subsidy"));if(!t){if($("r_type").value==="sale")DB.seq.riceSale--;else DB.seq.riceSub--;}
+ $("r_name").value=t?t.buyerName:"";$("r_address").value=t?t.address:"";$("r_age").value=t?(t.age??""):"";
+ $("r_sex").value=t?t.sex:"Male";$("r_contact").value=t?t.contact||"":"";$("r_category").value=t?t.category:"Farmer";
+ $("r_idno").value=t?t.idNo||"":"";$("r_program").value=t?t.program||"":"";$("r_status").value=t?t.status:"Completed";
+ $("r_variety").value=t?t.variety||"":"";$("r_sacks").value=t?t.sacks??"":"";$("r_kgSack").value=t?(t.kgPerSack||DB.settings.kgSack):DB.settings.kgSack;
+ $("r_kilos").value=t?t.kilos:"";$("r_price").value=t?t.pricePerKg??"":"";$("r_discount").value=t?t.discount||0:0;
+ $("r_mode").value=t?t.mode:"Cash";$("r_remarks").value=t?t.remarks||"":"";
+ riceTypeChanged(true);$("r_autofill").classList.remove("show");calcRice(false);openModal("riceModal");
+}
+function riceTypeChanged(silent){const type=$("r_type").value,isSub=type==="subsidy";
+ if(!silent&&!$("r_id").value){$("r_txn").value=isSub?nextTxn("subsidy"):nextTxn("sale");if(isSub)DB.seq.riceSub--;else DB.seq.riceSale--;}
+ if(!$("r_id").value){$("r_program").value=isSub?"Rice Subsidy Program":"Regular Sale";$("r_status").value=isSub?"Released":"Completed";$("r_mode").value=isSub?"Free (Subsidy)":"Cash";
+  if(isSub)$("r_category").value="Poor / Marginalized Family";else $("r_category").value="Walk-in Buyer";}
+ if($("r_price").value===""||!$("r_id").value&&!silent)$("r_price").value=DB.settings.priceRice;
+ $("r_totalLabel").textContent=isSub?"AMOUNT PAID (0 if fully subsidized)":"AMOUNT DUE";
+ if(!silent)calcRice(false);}
+function autofillBuyer(){const v=$("r_name").value.trim().toLowerCase();const b=DB.buyers.find(x=>x.name.toLowerCase()===v);
+ if(b){$("r_address").value=b.address||"";$("r_age").value=b.age??"";$("r_sex").value=b.sex||"Male";$("r_contact").value=b.contact||"";$("r_category").value=b.category||"Farmer";$("r_idno").value=b.idNo||"";$("r_autofill").classList.add("show");}
+ else $("r_autofill").classList.remove("show");}
+function calcRice(fromSacks){const sacks=+$("r_sacks").value||0,kgSack=+$("r_kgSack").value||DB.settings.kgSack;
+ if(fromSacks&&sacks>0)$("r_kilos").value=+(sacks*kgSack).toFixed(2);
+ const k=+$("r_kilos").value||0,p=+$("r_price").value||0,d=+$("r_discount").value||0;const g=k*p,n=Math.max(0,g-d);
+ $("r_cK").textContent=num(k);$("r_cP").textContent=num(p);$("r_cG").textContent=num(g);$("r_cD").textContent=num(d);$("r_cN").textContent=num(n);$("r_cWords").textContent=n?amountWords(n):(k?"Fully subsidized — no payment":"—");}
+function saveRice(print){
+ const name=$("r_name").value.trim(),addr=$("r_address").value.trim(),k=+$("r_kilos").value||0;
+ if(!name||!addr||!k){toast("Please fill Name, Address and Total Kilos.",true);return;}
+ if(!$("r_date").value){toast("Transaction date is required.",true);return;}
+ const type=$("r_type").value;let d=+$("r_discount").value||0;const price=+$("r_price").value||0,g=k*price;
+ if(type==="subsidy"&&$("r_discount").value===""||type==="subsidy"&&d===0&&g>0){d=g;$("r_discount").value=g.toFixed(2);}
+ const id=$("r_id").value;let t=id?DB.riceTx.find(x=>x.id===id):null;const isNew=!t;
+ if(isNew){t={id:uid("r"),txnNo:$("r_txn").value||nextTxn(type)};DB.riceTx.push(t);
+  const n=parseInt(t.txnNo.slice(-4));if(type==="sale")DB.seq.riceSale=Math.max(DB.seq.riceSale,n||0);else DB.seq.riceSub=Math.max(DB.seq.riceSub,n||0);}
+ Object.assign(t,{type,date:$("r_date").value,status:$("r_status").value,buyerName:name,address:addr,age:$("r_age").value?+$("r_age").value:"",sex:$("r_sex").value,contact:$("r_contact").value.trim(),category:$("r_category").value,idNo:$("r_idno").value.trim(),program:$("r_program").value.trim(),variety:$("r_variety").value.trim(),sacks:$("r_sacks").value===""?"":+$("r_sacks").value,kgPerSack:+$("r_kgSack").value||DB.settings.kgSack,kilos:k,pricePerKg:price,gross:+g.toFixed(2),discount:+d.toFixed(2),net:+(g-d).toFixed(2),mode:$("r_mode").value,remarks:$("r_remarks").value.trim()});
+ let b=DB.buyers.find(x=>x.name.toLowerCase()===name.toLowerCase());
+ if(!b){b={id:uid("b"),name};DB.buyers.push(b);}Object.assign(b,{name,address:addr,age:t.age,sex:t.sex,contact:t.contact,category:t.category,idNo:t.idNo});
+ save();refreshAll();closeModal("riceModal");toast((isNew?"Recorded ":"Updated ")+t.txnNo+" — "+num(k)+" kg");
+ if(print)quickDoc("rice",t.id,t.type==="sale"?2:3);
+}
+function deleteRice(id){const t=DB.riceTx.find(x=>x.id===id);if(!t)return;if(!confirm("Delete "+t.txnNo+" ("+t.buyerName+")? This cannot be undone."))return;DB.riceTx=DB.riceTx.filter(x=>x.id!==id);save();refreshAll();toast("Deleted "+t.txnNo);}
+
+/* ================= BENEFICIARIES ================= */
+const BEN_CATS=["Farmer","Poor / Marginalized Family","Senior Citizen","PWD","4Ps Member","Solo Parent","Walk-in Buyer","Institutional Buyer","LGU / Barangay","Other"];
+function beneficiaryRows(){const map={};
+ DB.farmers.forEach(f=>{map["F|"+f.name.toLowerCase()]=map["F|"+f.name.toLowerCase()]||{name:f.name,address:f.address,age:f.age,sex:f.sex,id:f.rsbsa,category:"Farmer",palay:0,rice:0};});
+ DB.palayTx.forEach(t=>{if(t.status==="Cancelled")return;const k="F|"+t.farmerName.toLowerCase();map[k]=map[k]||{name:t.farmerName,address:t.address,age:t.age,sex:t.sex,id:t.rsbsa,category:"Farmer",palay:0,rice:0};map[k].palay+=+t.weightKg||0;if(!map[k].address)map[k].address=t.address;});
+ DB.riceTx.forEach(t=>{if(t.status==="Cancelled")return;const k=(t.type==="subsidy"?"S|":"B|")+t.buyerName.toLowerCase();map[k]=map[k]||{name:t.buyerName,address:t.address,age:t.age,sex:t.sex,id:t.idNo,category:t.category||(t.type==="subsidy"?"Beneficiary":"Buyer"),palay:0,rice:0};map[k].rice+=+t.kilos||0;if(!map[k].address)map[k].address=t.address;});
+ return Object.values(map).sort((a,b)=>a.name.localeCompare(b.name));}
+function renderBeneficiaries(){
+ const rows=beneficiaryRows();const cats={};rows.forEach(r=>{if(r.rice>0||r.category!=="Farmer"&&r.category!=="Walk-in Buyer"&&r.category!=="Institutional Buyer")cats[r.category]=(cats[r.category]||0)+1;});
+ const subTotal=rows.filter(r=>r.rice>0).length;
+ $("benCards").innerHTML=BEN_CATS.map((c,i)=>{const n=rows.filter(r=>r.category===c&&(r.rice>0||c==="Farmer")).length;
+  const rice=rows.filter(r=>r.category===c).reduce((a,r)=>a+r.rice,0);
+  return `<div class="cat-card" style="border-left-color:${["#1b5e20","#c9a227","#1565c0","#6a1b9a","#e65100","#00695c","#78909c","#5d4037","#33691e","#37474f"][i%10]}"><h5>${esc(c)}</h5><div class="n">${c==="Farmer"?rows.filter(r=>r.palay>0).length:n}</div><div style="font-size:12px;color:var(--muted)">${num(rice)} kg rice received</div></div>`;}).join("");
+ const q=($("benSearch").value||"").toLowerCase(),cf=$("benCatFilter").value;
+ const filt=rows.filter(r=>(!cf||r.category===cf)&&(!q||(r.name+" "+r.address+" "+r.category+" "+(r.id||"")).toLowerCase().includes(q)));
+ $("benCount").textContent=filt.length+" record(s)";
+ $("benTableBody").innerHTML=filt.map(r=>`<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.address||"—")}</td><td class="num">${r.age??"—"}</td><td>${esc(r.sex||"—")}</td><td>${esc(r.id||"—")}</td><td>${esc(r.category)}</td><td class="num">${r.palay?num(r.palay):"—"}</td><td class="num">${r.rice?num(r.rice):"—"}</td></tr>`).join("")||'<tr><td colspan="8"><div class="empty">No beneficiaries found.</div></td></tr>';
+}
+
+/* ================= INVENTORY & MILLING ================= */
+function renderInventory(){
+ const s=stockLevels();
+ $("invStats").innerHTML=kpiCard("Palay Stock",num(s.palay)+" kg",num(s.palayIn)+" procured − "+num(s.milled)+" milled","",IC.palay)+kpiCard("Milled-Rice Stock",num(s.rice)+" kg",num(s.riceMade)+" milled − "+num(s.riceOut)+" released","gold",IC.box)+kpiCard("Avg. Recovery",avgRecovery()+" %","target "+DB.settings.recovery+"%","teal",IC.cash)+kpiCard("Rice Released (all time)",num(s.riceOut)+" kg","sales + subsidy","blue",IC.rice);
+ const rows=[...DB.milling].sort((a,b)=>b.date.localeCompare(a.date));let pi=0,ro=0;
+ rows.forEach(m=>{pi+=+m.palayKg||0;ro+=+m.riceKg||0;});
+ $("millingTableBody").innerHTML=rows.map(m=>`<tr><td><b>${esc(m.txnNo)}</b></td><td>${fdate(m.date)}</td><td class="num">${num(m.palayKg)}</td><td class="num">${num(m.riceKg)}</td><td class="num">${m.recovery}%</td><td>${esc(m.remarks||"—")}</td><td><div class="row-actions"><button class="btn sm" onclick="openMillModal('${m.id}')">Edit</button><button class="btn sm danger" onclick="deleteMill('${m.id}')">Del</button></div></td></tr>`).join("")||'<tr><td colspan="7"><div class="empty">No milling batches recorded yet.</div></td></tr>';
+ $("millingTableFoot").innerHTML=rows.length?`<tr><td colspan="2">TOTAL (${rows.length})</td><td class="num">${num(pi)}</td><td class="num">${num(ro)}</td><td class="num">${pi?(ro/pi*100).toFixed(1):0}%</td><td colspan="2"></td></tr>`:"";
+}
+function openMillModal(id){const m=id?DB.milling.find(x=>x.id===id):null;
+ $("m_id").value=id||"";$("m_date").value=m?m.date:todayStr();$("m_txn").value=m?m.txnNo:nextTxn("mill");if(!m)DB.seq.mill--;
+ $("m_palay").value=m?m.palayKg:"";$("m_rice").value=m?m.riceKg:"";$("m_remarks").value=m?m.remarks||"":"";calcMill(true);openModal("millModal");}
+function calcMill(fromPalay){const s=stockLevels();const pi=+$("m_palay").value||0;
+ if(fromPalay&&pi>0&&!$("m_id").value){$("m_rice").value=+(pi*DB.settings.recovery/100).toFixed(2);}
+ const ro=+$("m_rice").value||0;$("m_recovery").value=pi?((ro/pi*100).toFixed(1)+" %"):"—";
+ $("m_hint").innerHTML=`Palay available: <b>${num(s.palay)} kg</b> &nbsp;•&nbsp; Rice on hand: <b>${num(s.rice)} kg</b> &nbsp;•&nbsp; Default recovery: <b>${DB.settings.recovery}%</b>${pi>s.palay&&!$("m_id").value?'<br><b style="color:#c62828">Warning:</b> input exceeds palay stock.':""}`;}
+function saveMill(){const pi=+$("m_palay").value||0,ro=+$("m_rice").value||0;
+ if(!pi||!ro||!$("m_date").value){toast("Date, palay input and rice output are required.",true);return;}
+ const id=$("m_id").value;let m=id?DB.milling.find(x=>x.id===id):null;const isNew=!m;
+ if(isNew){m={id:uid("m"),txnNo:$("m_txn").value||nextTxn("mill")};DB.milling.push(m);DB.seq.mill=Math.max(DB.seq.mill,parseInt(m.txnNo.slice(-3))||DB.seq.mill);}
+ Object.assign(m,{date:$("m_date").value,palayKg:pi,riceKg:ro,recovery:+(ro/pi*100).toFixed(1),remarks:$("m_remarks").value.trim()});
+ save();refreshAll();closeModal("millModal");toast((isNew?"Recorded ":"Updated ")+m.txnNo);}
+function deleteMill(id){const m=DB.milling.find(x=>x.id===id);if(!m)return;if(!confirm("Delete batch "+m.txnNo+"? Stocks will be recalculated."))return;DB.milling=DB.milling.filter(x=>x.id!==id);save();refreshAll();toast("Deleted "+m.txnNo);}
+
+/* ================= DOCUMENTS ================= */
+let editingTpl=null,lastDocHTML="";
+function refreshDocTxns(){const mod=$("docModule").value;
+ const list=mod==="palay"?[...DB.palayTx].sort((a,b)=>b.date.localeCompare(a.date)): [...DB.riceTx].sort((a,b)=>b.date.localeCompare(a.date));
+ $("docTxn").innerHTML=list.map(t=>{const nm=mod==="palay"?t.farmerName:t.buyerName;return `<option value="${t.id}">${esc(t.txnNo)} — ${esc(nm)} (${fdate(t.date)})</option>`;}).join("")||'<option value="">— no transactions —</option>';
+ refreshDocTemplates();renderDocPreview();}
+function refreshDocTemplates(){const mod=$("docModule").value;
+ const list=DB.templates.filter(t=>t.kind===mod||t.kind==="both");
+ $("docTemplate").innerHTML=list.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join("")||'<option value="">— no template —</option>';}
+function docContext(){const mod=$("docModule").value,tid=$("docTxn").value;const s=DB.settings;
+ const base={center_name:s.center,lgu:s.lgu,center_address:s.address,center_contact:s.contact,officer:s.officer||"__________________"};
+ if(mod==="palay"){const t=DB.palayTx.find(x=>x.id===tid);if(!t)return null;
+  return{...base,txn_no:t.txnNo,date:fdate(t.date),name:t.farmerName,address:t.address,age:t.age??"",sex:t.sex||"",contact:t.contact||"",rsbsa:t.rsbsa||"—",id_no:t.rsbsa||"—",category:"Farmer",program:"Palay Procurement",variety:t.variety||"—",classification:t.classification||"",weight_kg:num(t.weightKg),moisture:t.moisture??"—",sacks:"—",kg_per_sack:"—",kilos:num(t.weightKg),price_per_kg:num(t.pricePerKg),gross:num(t.gross),deductions:num(t.deductions),deduction_note:t.deductionNote||"none",discount:num(t.deductions),net:num(t.net),amount_in_words:amountWords(t.net),status:t.status,mode:t.mode,remarks:t.remarks||"—"};}
+ const t=DB.riceTx.find(x=>x.id===tid);if(!t)return null;
+ return{...base,txn_no:t.txnNo,date:fdate(t.date),name:t.buyerName,address:t.address,age:t.age??"",sex:t.sex||"",contact:t.contact||"",rsbsa:t.idNo||"—",id_no:t.idNo||"—",category:t.category||"",program:t.program||"",variety:t.variety||"—",classification:"",weight_kg:"—",moisture:"—",sacks:t.sacks??"—",kg_per_sack:t.kgPerSack,kilos:num(t.kilos),price_per_kg:num(t.pricePerKg),gross:num(t.gross),deductions:"0.00",deduction_note:"—",discount:num(t.discount),net:num(t.net),amount_in_words:t.net>0?amountWords(t.net):"Zero Pesos Only",status:t.status,mode:t.mode,remarks:t.remarks||"—"};}
+function fillTemplate(body,ctx,title){return (body||"").replace(/\{\{\s*([a-z_]+)\s*\}\}/g,(m,k)=>{if(k==="doc_title")return esc(title||"");return esc(ctx[k]??"");});}
+function renderDocPreview(){const tpl=DB.templates.find(t=>t.id===$("docTemplate").value);
+ const draft=$("tplBody")&&$("tplEditorCard").style.display!=="none"&&editingTpl===$("docTemplate").value?$("tplBody").value:null;
+ const ctx=docContext();
+ if(!tpl||!ctx){$("docPreview").innerHTML='<div class="empty">Select a transaction and template to preview the document.</div>';lastDocHTML="";return;}
+ lastDocHTML=fillTemplate(draft??tpl.body,ctx,tpl.title||tpl.name);
+ $("docPreview").innerHTML=lastDocHTML;}
+function renderTemplateList(){$("templateList").innerHTML=DB.templates.map(t=>`<div class="tpl-item ${editingTpl===t.id?"active":""}"><h5>${esc(t.name)}</h5><p>For: ${t.kind==="both"?"Palay & Rice":t.kind==="palay"?"Palay Buying":"Rice / Subsidy"}</p><div class="row-actions" style="margin-top:8px"><button class="btn sm" onclick="editTemplate('${t.id}')">Edit</button><button class="btn sm" onclick="useTemplate('${t.id}')">Use</button></div></div>`).join("");
+ $("phRef").innerHTML=PLACEHOLDERS.map(p=>`<tr><td>${p[0]}</td><td>${p[1]}</td></tr>`).join("");}
+function editTemplate(id){const t=DB.templates.find(x=>x.id===id);if(!t)return;editingTpl=id;
+ $("tplEditName").textContent=t.name;$("tplName").value=t.name;$("tplKind").value=t.kind;$("tplBody").value=t.body;
+ $("tplEditorCard").style.display="block";renderTemplateList();
+ $("tplEditorCard").scrollIntoView({behavior:"smooth",block:"nearest"});}
+function newTemplate(){const t={id:uid("tpl"),name:"Untitled Template",kind:$("docModule").value,title:"DOCUMENT",body:HEAD_TPL+"\n<p>Replace this with your official template. Use {{placeholders}} from the reference list.</p>\n"+SIGN_TPL};
+ DB.templates.push(t);save();refreshDocTemplates();$("docTemplate").value=t.id;renderDocPreview();editTemplate(t.id);toast("New template created — paste your format below.");}
+function saveTemplate(){const t=DB.templates.find(x=>x.id===editingTpl);if(!t)return;
+ t.name=$("tplName").value.trim()||t.name;t.kind=$("tplKind").value;t.body=$("tplBody").value;
+ if(!t.title||t.title==="DOCUMENT")t.title=t.name.toUpperCase();
+ save();renderTemplateList();refreshDocTemplates();$("docTemplate").value=t.id;renderDocPreview();toast("Template saved.");}
+function deleteTemplate(){if(!editingTpl)return;const t=DB.templates.find(x=>x.id===editingTpl);
+ if(!confirm('Delete template "'+(t?t.name:"")+'"?'))return;
+ DB.templates=DB.templates.filter(x=>x.id!==editingTpl);editingTpl=null;$("tplEditorCard").style.display="none";save();renderTemplateList();refreshDocTemplates();renderDocPreview();toast("Template deleted.");}
+function closeTplEditor(){editingTpl=null;$("tplEditorCard").style.display="none";renderTemplateList();renderDocPreview();}
+function useTemplate(id){const t=DB.templates.find(x=>x.id===id);if(!t)return;
+ if(t.kind!=="both"){$("docModule").value=t.kind;refreshDocTxns();}
+ $("docTemplate").value=id;renderDocPreview();toast("Template ready — pick a transaction.");}
+function quickDoc(mod,id,tplIndex){document.querySelector('[data-view="documents"]').click();
+ $("docModule").value=mod;refreshDocTxns();$("docTxn").value=id;
+ const list=DB.templates.filter(t=>t.kind===mod||t.kind==="both");
+ const prefer=list[tplIndex]||list[0];if(prefer)$("docTemplate").value=prefer.id;
+ renderDocPreview();
+ setTimeout(()=>{if(confirm("Print this document now?"))printDocPreview();},350);}
+function printDocPreview(){if(!lastDocHTML){toast("Nothing to print — select a transaction first.",true);return;}
+ $("printArea").innerHTML=`<div class="paper">${lastDocHTML}</div>`;window.print();}
+
+/* ================= REPORTS ================= */
+function monthlyRows(year){return MONTHS.map((m,i)=>{const p=palayTotals(year,i),r=riceTotals(year,i);return{month:m,...p,...r,netCash:r.saleRev-p.paid};});}
+function renderReports(){const year=+$("repYear").value||new Date().getFullYear();$("repYearLabel").textContent=year;
+ const p=palayTotals(year,""),r=riceTotals(year,""),s=stockLevels();
+ $("repSummary").innerHTML=kpiCard("Palay Cost (YTD)",peso(p.net),num(p.kg)+" kg • "+p.count+" txns","",IC.palay)+kpiCard("Sales (YTD)",peso(r.saleRev),num(r.saleKg)+" kg","blue",IC.rice)+kpiCard("Subsidy (YTD)",num(r.subKg)+" kg",r.benCount+" beneficiaries","",IC.gift)+kpiCard("Net Cash Flow (YTD)",peso(r.saleRev-p.paid),"sales − palay payouts","gold",IC.cash);
+ const rows=monthlyRows(year);let t={kg:0,net:0,saleKg:0,saleRev:0,subKg:0,ben:0,netCash:0};
+ const benSet=new Set();DB.riceTx.forEach(t=>{if(t.type==="subsidy"&&t.status!=="Cancelled"&&inPeriod(t.date,year,""))benSet.add(t.buyerName+"|"+t.address);});
+ rows.forEach(x=>{t.kg+=x.kg;t.net+=x.net;t.saleKg+=x.saleKg;t.saleRev+=x.saleRev;t.subKg+=x.subKg;t.netCash+=x.netCash;});
+ $("repMonthlyBody").innerHTML=rows.map(x=>`<tr><td><b>${x.month}</b></td><td class="num">${num(x.kg)}</td><td class="num">${peso(x.net)}</td><td class="num">${num(x.saleKg)}</td><td class="num">${peso(x.saleRev)}</td><td class="num">${num(x.subKg)}</td><td class="num">${x.benCount}</td><td class="num"><b style="color:${x.netCash>=0?"#1b5e20":"#c62828"}">${peso(x.netCash)}</b></td></tr>`).join("");
+ $("repMonthlyFoot").innerHTML=`<tr><td>TOTAL</td><td class="num">${num(t.kg)}</td><td class="num">${peso(t.net)}</td><td class="num">${num(t.saleKg)}</td><td class="num">${peso(t.saleRev)}</td><td class="num">${num(t.subKg)}</td><td class="num">${benSet.size}</td><td class="num">${peso(t.netCash)}</td></tr>`;}
+
+/* ================= EXPORT / IMPORT ================= */
+function download(name,content,type){const b=new Blob([content],{type:type||"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);}
+const csvCell=v=>{v=String(v??"");return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+function exportCSV(kind){let head=[],rows=[];
+ if(kind==="palay"){head=["Txn No","Date","Farmer","Address","Age","Sex","Contact","RSBSA","Variety","Classification","Kg","MC%","Price/kg","Gross","Deductions","Deduction Note","Net Payable","Status","Mode","Remarks"];
+  rows=DB.palayTx.map(t=>[t.txnNo,t.date,t.farmerName,t.address,t.age,t.sex,t.contact,t.rsbsa,t.variety,t.classification,t.weightKg,t.moisture,t.pricePerKg,t.gross,t.deductions,t.deductionNote,t.net,t.status,t.mode,t.remarks]);}
+ else if(kind==="rice"){head=["Txn No","Date","Type","Buyer/Recipient","Address","Age","Sex","Contact","Category","ID No","Program","Variety","Sacks","Kg/Sack","Kilos","Price/kg","Gross","Discount","Net","Status","Mode","Remarks"];
+  rows=DB.riceTx.map(t=>[t.txnNo,t.date,t.type,t.buyerName,t.address,t.age,t.sex,t.contact,t.category,t.idNo,t.program,t.variety,t.sacks,t.kgPerSack,t.kilos,t.pricePerKg,t.gross,t.discount,t.net,t.status,t.mode,t.remarks]);}
+ else if(kind==="beneficiaries"){head=["Name","Address","Age","Sex","RSBSA/ID","Category","Palay Sold (kg)","Rice Received (kg)"];
+  rows=beneficiaryRows().map(r=>[r.name,r.address,r.age,r.sex,r.id,r.category,r.palay,r.rice]);}
+ else if(kind==="milling"){head=["Batch No","Date","Palay In (kg)","Rice Out (kg)","Recovery %","Remarks"];
+  rows=DB.milling.map(m=>[m.txnNo,m.date,m.palayKg,m.riceKg,m.recovery,m.remarks]);}
+ else{head=["Month","Palay kg","Palay Cost","Rice Sold kg","Sales","Subsidy kg","Beneficiaries","Net Cash"];
+  const y=+$("repYear").value||new Date().getFullYear();rows=monthlyRows(y).map(x=>[x.month+" "+y,x.kg.toFixed(2),x.net.toFixed(2),x.saleKg.toFixed(2),x.saleRev.toFixed(2),x.subKg.toFixed(2),x.benCount,x.netCash.toFixed(2)]);}
+ const csv=[head,...rows].map(r=>r.map(csvCell).join(",")).join("\n");
+ download("ARPC-"+kind+"-"+todayStr()+".csv",csv,"text/csv");toast("Exported "+rows.length+" row(s) to CSV.");}
+function exportJSON(){download("ARPC-backup-"+todayStr()+".json",JSON.stringify(DB,null,2),"application/json");toast("Backup downloaded.");}
+function importJSON(input){const f=input.files[0];if(!f)return;const rd=new FileReader();
+ rd.onload=()=>{try{const d=JSON.parse(rd.result);if(!d.settings||!Array.isArray(d.palayTx))throw 0;DB=d;save();refreshAll();loadSettingsForm();toast("Backup imported successfully.");}catch(e){toast("Invalid backup file.",true);}};
+ rd.readAsText(f);input.value="";}
+function resetAll(){if(!confirm("Delete ALL records and settings? This cannot be undone. Export a backup first if needed."))return;DB=blankDB();save();loadSettingsForm();refreshAll();toast("All data cleared.");}
+function loadDemo(ask){if(ask&&!confirm("Replace current data with demo records?"))return;const tpl=DB.templates,seq=DB.seq;DB=blankDB();DB.templates=tpl;seedDemo();save();refreshAll();toast("Demo data loaded.");}
+
+/* ================= SETTINGS ================= */
+function loadSettingsForm(){const s=DB.settings;$("setCenter").value=s.center;$("setLgu").value=s.lgu;$("setAddress").value=s.address;$("setContact").value=s.contact;$("setOfficer").value=s.officer||"";
+ $("setPriceFresh").value=s.priceFresh;$("setPriceDry").value=s.priceDry;$("setMcThresh").value=s.mcThresh;$("setPriceRice").value=s.priceRice;
+ $("setRecovery").value=s.recovery;$("setKgSack").value=s.kgSack;$("setFund").value=s.fund;$("setLowStock").value=s.lowStock;
+ $("dataStats").textContent=`Stored locally: ${DB.palayTx.length} palay txns • ${DB.riceTx.length} rice txns • ${DB.farmers.length} farmers • ${DB.buyers.length} buyers/recipients • ${DB.milling.length} milling batches • ${DB.templates.length} templates`;}
+function saveSettings(){const s=DB.settings;
+ s.center=$("setCenter").value.trim()||s.center;s.lgu=$("setLgu").value.trim()||s.lgu;s.address=$("setAddress").value.trim();s.contact=$("setContact").value.trim();s.officer=$("setOfficer").value.trim();
+ s.priceFresh=+$("setPriceFresh").value||0;s.priceDry=+$("setPriceDry").value||0;s.mcThresh=+$("setMcThresh").value||14;s.priceRice=+$("setPriceRice").value||0;
+ s.recovery=+$("setRecovery").value||65;s.kgSack=+$("setKgSack").value||25;s.fund=+$("setFund").value||0;s.lowStock=+$("setLowStock").value||0;
+ save();refreshAll();toast("Settings saved.");}
+
+/* ================= MODALS / FILTERS / INIT ================= */
+function openModal(id){$(id).classList.add("open");}
+function closeModal(id){$(id).classList.remove("open");}
+document.querySelectorAll(".modal-back").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open");}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal-back.open").forEach(m=>m.classList.remove("open"));});
+$("p_price").addEventListener("input",()=>{$("p_price").dataset.auto="";});
+function fillYearSelects(){const yrs=new Set([new Date().getFullYear()]);DB.palayTx.forEach(t=>yrs.add(+t.date.slice(0,4)));DB.riceTx.forEach(t=>yrs.add(+t.date.slice(0,4)));
+ const arr=[...yrs].filter(Boolean).sort((a,b)=>b-a);
+ $("dashYear").innerHTML=arr.map(y=>`<option ${y===new Date().getFullYear()?"selected":""}>${y}</option>`).join("");
+ $("repYear").innerHTML=arr.map(y=>`<option ${y===new Date().getFullYear()?"selected":""}>${y}</option>`).join("");
+ const mos=new Set();DB.palayTx.forEach(t=>mos.add(t.date.slice(0,7)));DB.riceTx.forEach(t=>mos.add(t.date.slice(0,7)));
+ const marr=[...mos].filter(Boolean).sort().reverse();
+ $("palayMonthFilter").innerHTML='<option value="">All months</option>'+marr.map(m=>{const[y,mo]=m.split("-");return `<option value="${m}">${MONTHS[+mo-1]} ${y}</option>`;}).join("");
+ $("riceMonthFilter").innerHTML='<option value="">All months</option>'+marr.map(m=>{const[y,mo]=m.split("-");return `<option value="${m}">${MONTHS[+mo-1]} ${y}</option>`;}).join("");
+ $("benCatFilter").innerHTML='<option value="">All categories</option>'+BEN_CATS.map(c=>`<option>${c}</option>`).join("");}
+function refreshAll(){fillYearSelects();renderDashboard();renderPalay();renderRice();renderBeneficiaries();renderInventory();renderTemplateList();refreshDocTxns();renderReports();loadSettingsForm();}
+window.addEventListener("DOMContentLoaded",()=>{
+ load();
+ if(!DB.palayTx.length&&!DB.riceTx.length&&!localStorage.getItem("ARPC_INIT")){seedDemo();localStorage.setItem("ARPC_INIT","1");save();}
+ $("todayChip").textContent=new Date().toLocaleDateString("en-PH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+ const cm=new Date().getMonth();$("dashMonth").value=String(cm);
+ refreshFarmerList();refreshBuyerList();refreshAll();
+});
+</script>
+</body>
+</html>
