@@ -195,7 +195,6 @@ footer.app-foot{text-align:center;color:var(--muted);font-size:12px;padding:18px
 .auth-keep{display:flex!important;align-items:center;gap:8px;margin:14px 0 14px!important;font-size:12.5px!important;font-weight:500!important;color:var(--muted)!important}
 .auth-go{width:100%;padding:12px!important;font-size:14.5px}
 #authError{display:none;margin-top:12px;padding:9px 12px;border-radius:10px;background:var(--red-bg);color:var(--red);font-size:13px;font-weight:600}
-#authHint{margin-top:14px;font-size:12px;color:var(--muted)}
 .auth-foot{margin-top:18px;padding-top:12px;border-top:1px dashed #e2d9c3;font-size:11px;color:var(--muted)}
 .aud-diff{max-width:340px}
 .aud-diff pre{margin:6px 0 0;padding:8px 10px;background:#f7f4ec;border:1px solid #e7e0cf;border-radius:8px;font-size:10.5px;max-height:180px;overflow:auto;white-space:pre-wrap;word-break:break-word}
@@ -250,7 +249,6 @@ footer.app-foot{text-align:center;color:var(--muted);font-size:12px;padding:18px
       <label class="auth-keep"><input type="checkbox" id="authKeep" checked> Keep me signed in on this device</label>
       <button type="submit" class="btn primary auth-go">&#128275; Enter the System</button>
       <div id="authError"></div>
-      <p id="authHint">First time? Use the default password <b>@EdiMAO2024</b> &mdash; change it later in Settings &rarr; Security.</p>
     </form>
     <p class="auth-foot">Developed by: ENGR. JOHN MARK C. CONTILLO</p>
   </div>
@@ -4120,7 +4118,7 @@ function rosterImport(){
 }
 
 /* ================= AUTH GATE & AUDIT TRAIL ================= */
-const DEFAULT_PASS_HASH="2900010e92fdc3cd4b6312fa14b15a1974d264a32186516b442274c6a712186e"; /* sha256("@EdiMAO2024") */
+const DEFAULT_PASS_HASH="2900010e92fdc3cd4b6312fa14b15a1974d264a32186516b442274c6a712186e"; /* sha256 of the default admin PIN */
 function sha256hex(str){
   function rr(v,a){return (v>>>a)|(v<<(32-a));}
   const bytes=Array.from(new TextEncoder().encode(str));
@@ -4160,8 +4158,7 @@ function isAdmin(){const u=currentUser();return !!(u&&u.role==="admin");}
 function refreshAuthUserSel(){const sel=$("authUserSel");if(!sel)return;sel.innerHTML=(DB.users||[]).map(u=>'<option value="'+esc(u.name)+'">'+esc(u.name)+(u.role==="admin"?" (administrator)":"")+"</option>").join("");}
 function isAuthed(){return localStorage.getItem("ARPC_AUTH_L")==="1"||sessionStorage.getItem("ARPC_AUTH_S")==="1";}
 function authUser(){try{const u=JSON.parse(localStorage.getItem("ARPC_USER")||"{}");return (u&&u.name)||"Operator";}catch(e){return "Operator";}}
-function updateAuthHint(){const a=(DB.users||[]).find(x=>x.role==="admin");if($("authHint"))$("authHint").style.display=(a&&a.pinHash===DEFAULT_PASS_HASH)?"block":"none";}
-function showAuthScreen(){document.body.classList.add("no-auth");$("authScreen").style.display="flex";refreshAuthUserSel();updateAuthHint();setTimeout(function(){try{$("authPass").focus();}catch(e){}},60);}
+function showAuthScreen(){document.body.classList.add("no-auth");$("authScreen").style.display="flex";refreshAuthUserSel();setTimeout(function(){try{$("authPass").focus();}catch(e){}},60);}
 function hideAuthScreen(){document.body.classList.remove("no-auth");$("authScreen").style.display="none";}
 function authErrShow(m){const e=$("authError");e.textContent=m;e.style.display="block";}
 function doLogin(ev){
@@ -4179,6 +4176,7 @@ function doLogin(ev){
  $("authError").style.display="none";
  hideAuthScreen();
  $("userChipName").textContent=u.name+(u.role==="admin"&&u.name!=="Admin"?" \u2022 Admin":"");
+ refreshAll();
  toast("Welcome, "+u.name+"! Every change you make is stamped in the Audit Trail.");
  return false;
 }
@@ -4201,7 +4199,6 @@ function changePassword(){
  logAudit("edit","user",u.name,"PIN of "+u.name+" changed by "+authUser());
  save();
  $("np_cur").value=$("np_new").value=$("np_new2").value="";
- updateAuthHint();
  toast("PIN updated.");
 }
 function renderUsersCard(){
@@ -4325,16 +4322,17 @@ window.addEventListener("DOMContentLoaded",()=>{
  if(!DB.palayTx.length&&!DB.riceTx.length&&!localStorage.getItem("ARPC_INIT")){seedDemo();localStorage.setItem("ARPC_INIT","1");save();}
  $("todayChip").textContent=new Date().toLocaleDateString("en-PH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
  const cm=new Date().getMonth();$("dashMonth").value=String(cm);
- refreshFarmerList();refreshBuyerList();refreshAll();
+ refreshFarmerList();refreshBuyerList();
  ensureAdminUser();
  const __un=authUser();
  if(isAuthed()&&!(DB.users||[]).some(x=>x.name===__un)){localStorage.removeItem("ARPC_AUTH_L");sessionStorage.removeItem("ARPC_AUTH_S");}
+ refreshAll();
  const __cu=currentUser();
  $("userChipName").textContent=authUser()+(__cu&&__cu.role==="admin"&&authUser()!=="Admin"?" \u2022 Admin":"");
  if(!isAuthed())showAuthScreen();
 });
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3dd76d6ea910663',t:'MTc4OTg3MjAxMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
 ame").textContent=authUser();
